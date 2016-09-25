@@ -4,9 +4,10 @@ import game.Game;
 import game.InputHandler;
 
 public class PlayerCharacter extends Character{
-
-	int renderX = Game.screen.xOffset+16*4;
-	int renderY = Game.screen.yOffset+16*4;
+	public final int xCenter = 16*4;
+	public final int yCenter = 16*4;
+	private int renderX;
+	private int renderY;
 	
 	int spriteSize = 16;
 	
@@ -20,7 +21,15 @@ public class PlayerCharacter extends Character{
 		super(spritePath);
 	}
 	
+	public int getRenderX(){
+		return renderX;
+	}
+	public int getRenderY(){
+		return renderY;
+	}
+	
 	public void walk(InputHandler input, Screen screen, Map map){
+		//Moves the pc smoothly to the next tile over the length of 16ticks
 		if(isWalking){
 			if(ticksWalked != 16){
 				if(input.getLastPressed() == input.up){
@@ -50,6 +59,7 @@ public class PlayerCharacter extends Character{
 		}
 		
 		//Bug with holding multiple keys at once allows u to phase through walls. Need fix.
+		//Logic for turning w/o moving and for moving to the next tile
 		if(input.up.isPressed()){
 			direction = 1;
 			if(input.up.ticksPressed() >= turnDelay){
@@ -90,119 +100,121 @@ public class PlayerCharacter extends Character{
 		}
 	}
 	
-	public void render(){
+	public void render(Screen screen){
+		//logic for rendering the correct sprites based on direction and position in walk cycle
 		if(isWalking){
 			switch (direction){
 			case 1:
 				if(ticksWalked < 8){
 					if (flag){
-						renderBackWalk1();
+						renderBackWalk1(screen);
 					}else{
-						renderBackWalk2();
+						renderBackWalk2(screen);
 					}
 						
 				}else if(ticksWalked <= 16){
-					renderBack();
+					renderBack(screen);
 				}
 				break;
 			case 2:
 				
 				if(ticksWalked < 8){
-					renderLeftProfileWalk();
+					renderLeftProfileWalk(screen);
 				}else if(ticksWalked <= 16){
-					renderLeftProfile();
+					renderLeftProfile(screen);
 				}
 				break;
 			case 3:
 				if(ticksWalked < 8){
 					if (flag){
-						renderForwardWalk1();
+						renderForwardWalk1(screen);
 					}else{
-						renderForwardWalk2();
+						renderForwardWalk2(screen);
 					}	
 				}else if(ticksWalked <= 16){
-					renderForward();
+					renderForward(screen);
 				}
 				break;
 			case 4:
 				if(ticksWalked < 8){
-					renderRightProfileWalk();
+					renderRightProfileWalk(screen);
 				}else if(ticksWalked <= 16){
-					renderRightProfile();
+					renderRightProfile(screen);
 				}
 				break;
 			}
 		}else{
 			switch (direction){
 			case 1:
-				renderBack();
+				renderBack(screen);
 				break;
 			case 2:
-				renderLeftProfile();
+				renderLeftProfile(screen);
 				break;
 			case 3:
-				renderForward();
+				renderForward(screen);
 				break;
 			case 4:
-				renderRightProfile();
+				renderRightProfile(screen);
 				break;
 			}
 			
 		}
 	}
 	
-	private void renderForward(){
-		updateRenderPos();
-		Game.screen.renderSprite(renderX, renderY, 0, 0, spriteSize, spriteSize, mcSpriteSheet);
+	private void renderForward(Screen screen){
+		updateRenderPos(screen);
+		screen.renderSprite(renderX, renderY, 0, 0, spriteSize, spriteSize, mcSpriteSheet);
 	}
 	
-	private void renderLeftProfile(){
-		updateRenderPos();
-		Game.screen.renderSprite(renderX, renderY, 1, 0, spriteSize, spriteSize, mcSpriteSheet);
+	private void renderLeftProfile(Screen screen){
+		updateRenderPos(screen);
+		screen.renderSprite(renderX, renderY, 1, 0, spriteSize, spriteSize, mcSpriteSheet);
 	}
 	
-	private void renderBack(){
-		updateRenderPos();
-		Game.screen.renderSprite(renderX, renderY, 2, 0, spriteSize, spriteSize, mcSpriteSheet);
+	private void renderBack(Screen screen){
+		updateRenderPos(screen);
+		screen.renderSprite(renderX, renderY, 2, 0, spriteSize, spriteSize, mcSpriteSheet);
 	}
 	
-	private void renderRightProfile(){
-		updateRenderPos();
-		Game.screen.renderSprite(renderX, renderY, 3, 0, spriteSize, spriteSize, mcSpriteSheet);
+	private void renderRightProfile(Screen screen){
+		updateRenderPos(screen);
+		screen.renderSprite(renderX, renderY, 3, 0, spriteSize, spriteSize, mcSpriteSheet);
 	}	
-	
-	
-	private void renderForwardWalk1(){
-		updateRenderPos();
-		Game.screen.renderSprite(renderX, renderY, 0, 1, spriteSize, spriteSize, mcSpriteSheet);
+
+	private void renderForwardWalk1(Screen screen){
+		updateRenderPos(screen);
+		screen.renderSprite(renderX, renderY, 0, 1, spriteSize, spriteSize, mcSpriteSheet);
 	}
-	private void renderForwardWalk2(){
-		updateRenderPos();
-		Game.screen.renderSprite(renderX, renderY, 0, 2, spriteSize, spriteSize, mcSpriteSheet);
-	}
-	
-	private void renderLeftProfileWalk(){
-		updateRenderPos();
-		Game.screen.renderSprite(renderX, renderY, 1, 1, spriteSize, spriteSize, mcSpriteSheet);
+
+	private void renderForwardWalk2(Screen screen){
+		updateRenderPos(screen);
+		screen.renderSprite(renderX, renderY, 0, 2, spriteSize, spriteSize, mcSpriteSheet);
 	}
 	
-	private void renderBackWalk1(){
-		updateRenderPos();
-		Game.screen.renderSprite(renderX, renderY, 2, 1, spriteSize, spriteSize, mcSpriteSheet);
-	}
-	private void renderBackWalk2(){
-		updateRenderPos();
-		Game.screen.renderSprite(renderX, renderY, 1, 2, spriteSize, spriteSize, mcSpriteSheet);
+	private void renderLeftProfileWalk(Screen screen){
+		updateRenderPos(screen);
+		screen.renderSprite(renderX, renderY, 1, 1, spriteSize, spriteSize, mcSpriteSheet);
 	}
 	
-	private void renderRightProfileWalk(){
-		updateRenderPos();
-		Game.screen.renderSprite(renderX, renderY, 3, 1, spriteSize, spriteSize, mcSpriteSheet);
+	private void renderBackWalk1(Screen screen){
+		updateRenderPos(screen);
+		screen.renderSprite(renderX, renderY, 2, 1, spriteSize, spriteSize, mcSpriteSheet);
 	}
 	
-	private void updateRenderPos(){
-		renderX = Game.screen.xOffset+16*4;
-		renderY = Game.screen.yOffset+16*4;
+	private void renderBackWalk2(Screen screen){
+		updateRenderPos(screen);
+		screen.renderSprite(renderX, renderY, 1, 2, spriteSize, spriteSize, mcSpriteSheet);
+	}
+	
+	private void renderRightProfileWalk(Screen screen){
+		updateRenderPos(screen);
+		screen.renderSprite(renderX, renderY, 3, 1, spriteSize, spriteSize, mcSpriteSheet);
+	}
+	
+	private void updateRenderPos(Screen screen){
+		renderX = screen.xOffset+xCenter+1;
+		renderY = screen.yOffset+yCenter-4;
 	}
 	
 

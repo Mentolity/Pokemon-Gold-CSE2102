@@ -8,6 +8,8 @@ public class Screen {
 	
 	public int xOffset = 360*16;
 	public int yOffset = 220*16;
+	//public int xOffset = 0;
+	//public int yOffset = 0;
 	
 	public int width;
 	public int height;
@@ -60,12 +62,18 @@ public class Screen {
 		yPos += yOffset;
 		
 		for(int y=0; y<height; y++){
-			if(y + yPos < 0 || y + yPos >= map.getHeight()) continue;
 			for(int x=0; x<width; x++){
-				if(x + xPos < 0 || x + xPos >= map.getWidth()) continue;
-				
-				pixels[(x) + ((y) * width)] = map.getPixels()[x+xPos + ((y+yPos)*map.getWidth())];;
-				
+				pixels[(x) + ((y) * width)] = 0x000000;
+			}
+		}
+		
+		for(int y=0; y<height; y++){
+			for(int x=0; x<width; x++){
+				if((x + xPos < 0 || x + xPos >= map.getWidth()) || (y + yPos < 0 || y + yPos >= map.getHeight())){
+					pixels[(x) + ((y) * width)] = 0xFF000000; //if were out of the maps bounds then render black
+				}else{
+					pixels[(x) + ((y) * width)] = map.getPixels()[x+xPos + ((y+yPos)*map.getWidth())];	//else render the map
+				}	
 			}
 		}
 	}

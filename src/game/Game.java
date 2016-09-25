@@ -16,20 +16,19 @@ import java.awt.image.DataBufferInt;
 
 import javax.swing.JFrame;
 
+import maps.Doors;
+import maps.ElmsLab;
+import maps.MainMap;
+
 // extends the canvas to the class and implements runnables
 // not exactly sure what this means but its required to use JFrames I think
 public class Game extends Canvas implements Runnable{
-	
-	
-	
-	
-	//serial don't know why but its needed
 	private static final long serialVersionUID = 1L;
 
 	public static final int WIDTH = 160; //width of the game
 	public static final int HEIGHT = 144; //height of the game
 	public static final int SCALE = 4; //allows you to scale the game
-	public static final String NAME = "Game"; //name of the game
+	public static final String NAME = "Definitely Not Pokemon"; //name of the game
 
 
 	private JFrame frame;
@@ -42,9 +41,9 @@ public class Game extends Canvas implements Runnable{
 	public static Screen screen;
 	public InputHandler input;
 	
-	Map map = new Map("/worldMap.png", "/worldPointMap.png");
 	PlayerCharacter mc;
-	
+		
+	Map map = new MainMap();
 
 	//constructor
 	public Game(){
@@ -131,18 +130,33 @@ public class Game extends Canvas implements Runnable{
 	//tick is going to update the game *the logic
 	public void tick(){
 		tickCount++;
-		mc.setyPos(screen.yOffset + 4*16);
-		mc.setxPos(screen.xOffset + 5*16);
+		mc.setyPos(screen.yOffset + mc.yCenter);
+		mc.setxPos(screen.xOffset + mc.xCenter);
 		
 		mc.walk(input, screen, map);
+		
+		//check if your on a door and if so go to that map
+		Doors d = map.onDoor(mc); 
+		if(d != null){
+			screen.xOffset = d.getxInitPos();
+			screen.yOffset = d.getyInitPos();
+			map = d.getMap();
+		}
+		
+		//debug info bound to 'P'
+		if(input.debug.isPressed() && input.debug.ticksPressed() <= 1){
+			System.out.println("PC Position: " + mc.getxPos() + ", " + mc.getyPos());
+			System.out.println("Screen Position: " + screen.xOffset + ", " + screen.yOffset);
+		}
 	}
 
 	
 	//will render the game
 
 	public void render(){
-		screen.renderMap(map);
-		mc.render();
+
+		map.render(screen);
+		mc.render(screen);
 		
 		/*
 		String msg = "This is my game!";
