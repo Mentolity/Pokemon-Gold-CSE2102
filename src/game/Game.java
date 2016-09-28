@@ -13,7 +13,16 @@ import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.File;
+import java.io.IOException;
 
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
 
 import maps.Doors;
@@ -44,7 +53,12 @@ public class Game extends Canvas implements Runnable{
 	PlayerCharacter mc;
 		
 	Map map = new MainMap();
+	
+	String audioPath ="./res/12_new_bark_town.wav";
+	Thread music = new Music(audioPath);
 
+	
+	
 	//constructor
 	public Game(){
 		//sets the canvas to within these bounds
@@ -67,6 +81,7 @@ public class Game extends Canvas implements Runnable{
 		screen = new Screen(WIDTH, HEIGHT, new SpriteSheet("/spritesheet.png"));
 		input = new InputHandler(this);
 		mc = new PlayerCharacter("/mcSpriteSheet.png");
+		music.start();
 	}	
 	
 	//start method
@@ -152,7 +167,6 @@ public class Game extends Canvas implements Runnable{
 
 	
 	//will render the game
-
 	public void render(){
 
 		map.render(screen);
