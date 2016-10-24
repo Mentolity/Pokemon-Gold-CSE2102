@@ -1,0 +1,8 @@
+package pokemon;
+
+
+public class Paralysis extends Status{
+	public Paralysis(){
+		text = "PAR";
+	}
+}

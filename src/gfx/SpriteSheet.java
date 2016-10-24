@@ -13,7 +13,7 @@ public class SpriteSheet {
 	private int[] pixels;
 	
 	public SpriteSheet(String path){
-		BufferedImage image = null; //bufers the image with the buffered image class
+		BufferedImage image = null; //buffers the image with the buffered image class
 		//loads the image
 		try {
 			image = ImageIO.read(SpriteSheet.class.getResourceAsStream(path));
@@ -25,7 +25,7 @@ public class SpriteSheet {
 		if(image == null){
 			return;
 		}
-		 //intiallizes the class variables for this instance
+		 //initializes the class variables for this instance
 		this.path = path;
 		this.width = image.getWidth();
 		this.height = image.getHeight();

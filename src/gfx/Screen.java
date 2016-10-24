@@ -1,5 +1,6 @@
 package gfx;
 
+
 public class Screen {
 	public static final int MAP_WIDTH = 64;
 	public static final int MAP_WIDTH_MASK = MAP_WIDTH - 1;
@@ -49,6 +50,20 @@ public class Screen {
 				if (((col & 0xffffff) != 0xff00ff) && ((col & 0xffffff) != 0x7f007f))//removes the sprite sheets grid colors
 					pixels[(x+xPos) + (y+yPos) * width] = col;
 				
+			}
+		}
+	}
+		
+	public void renderStaticImage(StaticImage img){
+		int xPos = img.xPos;
+		int yPos = img.yPos;
+		int imgwidth = img.width;
+		int imgheight = img.height;
+		for(int y=0; y<height; y++){
+			if(y < yPos || y >= yPos+imgheight) continue;
+			for(int x=0; x<width; x++){
+				if(x < xPos || x >= xPos+imgwidth) continue;
+				pixels[(x) + (y) * width] = img.pixels[(x-xPos) + ((y-yPos) * imgwidth)];
 			}
 		}
 	}

@@ -5,6 +5,8 @@ import gfx.Map;
 import gfx.PlayerCharacter;
 import gfx.Screen;
 import gfx.SpriteSheet;
+import gfx.Text;
+import gfx.Textbox;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
@@ -13,21 +15,14 @@ import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-import java.io.File;
-import java.io.IOException;
 
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
 
 import maps.Doors;
 import maps.ElmsLab;
 import maps.MainMap;
+import menu.MainMenu;
+import menu.Menu;
 
 // extends the canvas to the class and implements runnables
 // not exactly sure what this means but its required to use JFrames I think
@@ -38,7 +33,7 @@ public class Game extends Canvas implements Runnable{
 	public static final int HEIGHT = 144; //height of the game
 	public static final int SCALE = 4; //allows you to scale the game
 	public static final String NAME = "Definitely Not Pokemon"; //name of the game
-
+	public static SpriteSheet sheet = new SpriteSheet("/spritesheet.png");
 
 	private JFrame frame;
 	
@@ -49,16 +44,10 @@ public class Game extends Canvas implements Runnable{
 	
 	public static Screen screen;
 	public InputHandler input;
+	public Controller cont;
 	
-	PlayerCharacter mc;
-		
 	Map map = new MainMap();
-	
-	String audioPath ="./res/12_new_bark_town.wav";
-	Thread music = new Music(audioPath);
 
-	
-	
 	//constructor
 	public Game(){
 		//sets the canvas to within these bounds
@@ -80,8 +69,7 @@ public class Game extends Canvas implements Runnable{
 	public void init(){
 		screen = new Screen(WIDTH, HEIGHT, new SpriteSheet("/spritesheet.png"));
 		input = new InputHandler(this);
-		mc = new PlayerCharacter("/mcSpriteSheet.png");
-		music.start();
+		cont = new Controller();
 	}	
 	
 	//start method
@@ -132,7 +120,7 @@ public class Game extends Canvas implements Runnable{
 				render();
 			}
 			//if the current time minus the last time is greater than 1000 update
-			//this is so that it updates onces per tick instead of as fast as my computer can handle
+			//this is so that it updates once per tick instead of as fast as my computer can handle
 			if(System.currentTimeMillis() - lastTimer >= 1000){
 				lastTimer+=1000;
 				System.out.println(frames + " frames, " + ticks + " ticks");
@@ -145,33 +133,16 @@ public class Game extends Canvas implements Runnable{
 	//tick is going to update the game *the logic
 	public void tick(){
 		tickCount++;
-		mc.setyPos(screen.yOffset + mc.yCenter);
-		mc.setxPos(screen.xOffset + mc.xCenter);
-		
-		mc.walk(input, screen, map);
-		
-		//check if your on a door and if so go to that map
-		Doors d = map.onDoor(mc); 
-		if(d != null){
-			screen.xOffset = d.getxInitPos();
-			screen.yOffset = d.getyInitPos();
-			map = d.getMap();
-		}
-		
-		//debug info bound to 'P'
-		if(input.debug.isPressed() && input.debug.ticksPressed() <= 1){
-			System.out.println("PC Position: " + mc.getxPos() + ", " + mc.getyPos());
-			System.out.println("Screen Position: " + screen.xOffset + ", " + screen.yOffset);
-		}
+		cont.tick(this, screen);
 	}
 
 	
 	//will render the game
-	public void render(){
 
+	public void render(){
 		map.render(screen);
-		mc.render(screen);
-		
+		cont.mc.render(screen);
+		cont.menu.render(screen);
 		/*
 		String msg = "This is my game!";
         Fonts.render(msg, screen, screen.xOffset + screen.width / 2 - (msg.length() * 8 / 2), screen.yOffset + screen.height / 2);

@@ -15,7 +15,7 @@ public class InputHandler implements KeyListener{
 	public class Key{
 		private boolean pressed = false;
 		private int ticksPressed = 0;
-		
+		public boolean check = true;
 		public boolean isPressed(){
 			if(pressed){
 				ticksPressed++;
@@ -32,20 +32,42 @@ public class InputHandler implements KeyListener{
 		public int ticksPressed(){
 			return ticksPressed;
 		}
+		public boolean getCheck(){
+			return check;
+		}
 	}
 	
 	public Key up = new Key();
 	public Key down = new Key();
 	public Key left = new Key();
 	public Key right = new Key();
+	public Key enter = new Key();
+	public Key z =  new Key();
 	
 	public Key debug = new Key(); //posts debug information
 	
+	
 	public void keyPressed(KeyEvent e){
-		toggleKey(e.getKeyCode(), true);
+		int keycode = e.getKeyCode();
+		if(keycode == KeyEvent.VK_ENTER){
+			enter.check = false;
+			enter.toggle(true);
+		}
+		if(keycode == KeyEvent.VK_Z){
+			z.toggle(true);
+		}
+		toggleKey(keycode, true);
 	}
 	public void keyReleased(KeyEvent e){
-		toggleKey(e.getKeyCode(), false);
+		int keycode = e.getKeyCode();
+		if(keycode == KeyEvent.VK_ENTER){
+			enter.check = true;
+			enter.toggle(false);
+		}
+		if(keycode == KeyEvent.VK_Z){
+			z.toggle(false);
+		}
+		toggleKey(keycode, false);
 	}
 	public void keyTyped(KeyEvent e){
 	
@@ -64,7 +86,6 @@ public class InputHandler implements KeyListener{
 		if(keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT){
 			right.toggle(isPressed);
 		}
-		
 		if(keyCode == KeyEvent.VK_P){
 			debug.toggle(isPressed);
 		}
