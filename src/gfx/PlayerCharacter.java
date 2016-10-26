@@ -2,6 +2,7 @@ package gfx;
 
 import game.Game;
 import game.InputHandler;
+import game.InputHandler.Key;
 
 public class PlayerCharacter extends Character{
 	public final int xCenter = 16*4;
@@ -60,40 +61,24 @@ public class PlayerCharacter extends Character{
 		
 		//Bug with holding multiple keys at once allows u to phase through walls. Need fix.
 		//Logic for turning w/o moving and for moving to the next tile
-		if(input.up.isPressed()){
-			direction = 1;
-			if(input.up.ticksPressed() >= turnDelay){
-				if(map.isUpPassable(this)){
+		move(input.left, 2, input.up, input.down, input.right, map);
+		move(input.right, 4, input.up, input.down, input.left, map);
+		move(input.up, 1, input.down, input.left, input.right, map);
+		move(input.down, 3, input.up, input.left, input.right, map);
+	}
+	
+	private void move(Key check, int dir, Key k1, Key k2, Key k3, Map map){
+		//if multiple keys are pressed at the same time use the one that has been held the longest
+		if(check.ticksPressed() < k1.ticksPressed() || check.ticksPressed() < k2.ticksPressed() || check.ticksPressed() < k3.ticksPressed())
+			return;
+			
+		//if a key is pressed walk in that direction
+		if(check.isPressed()){
+			direction = dir;
+			if(check.ticksPressed() >= turnDelay){
+				if(map.isPassable(dir, this)){
 					isWalking = true;
 					flag = !flag;
-					ticksWalked = 0;
-				}
-			}
-		}
-		if(input.down.isPressed()){
-			direction = 3;
-			if(input.down.ticksPressed() >= turnDelay){
-				if(map.isDownPassable(this)){
-					isWalking = true;
-					flag = !flag;
-					ticksWalked = 0;
-				}
-			}
-		}
-		if(input.left.isPressed()){
-			direction = 2;
-			if(input.left.ticksPressed() >= turnDelay){
-				if(map.isLeftPassable(this)){
-					isWalking = true;
-					ticksWalked = 0;
-				}
-			}
-		}
-		if(input.right.isPressed()){
-			direction = 4;
-			if(input.right.ticksPressed() >= turnDelay){
-				if(map.isRightPassable(this)){
-					isWalking = true;
 					ticksWalked = 0;
 				}
 			}

@@ -41,6 +41,21 @@ public class Map {
 		}
 	}
 	
+	public boolean isPassable(int direction, PlayerCharacter mc){
+		switch (direction){
+			case 1:
+				return isUpPassable(mc);
+			case 2:
+				return isLeftPassable(mc);
+			case 3: 
+				return isDownPassable(mc);
+			case 4:
+				return isRightPassable(mc);
+			default:
+				return false;
+		}
+	}
+	
 	public boolean isUpPassable(PlayerCharacter mc){
 		return isPassable(mc, 0, -16);
 	}
