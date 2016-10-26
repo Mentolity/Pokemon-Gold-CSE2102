@@ -1,6 +1,5 @@
 package gfx;
 
-import game.Game;
 import game.InputHandler;
 import game.InputHandler.Key;
 

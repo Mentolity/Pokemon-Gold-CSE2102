@@ -1,12 +1,7 @@
 package game;
-import gfx.Colors;
-import gfx.Fonts;
 import gfx.Map;
-import gfx.PlayerCharacter;
 import gfx.Screen;
 import gfx.SpriteSheet;
-import gfx.Text;
-import gfx.Textbox;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
@@ -18,11 +13,8 @@ import java.awt.image.DataBufferInt;
 
 import javax.swing.JFrame;
 
-import maps.Doors;
-import maps.ElmsLab;
 import maps.MainMap;
-import menu.MainMenu;
-import menu.Menu;
+
 
 // extends the canvas to the class and implements runnables
 // not exactly sure what this means but its required to use JFrames I think

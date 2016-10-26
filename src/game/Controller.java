@@ -3,8 +3,6 @@ package game;
 import maps.Doors;
 import menu.MainMenu;
 import menu.Menu;
-import menu.MenuOption;
-import menu.Option;
 import gfx.PlayerCharacter;
 import gfx.Screen;
 

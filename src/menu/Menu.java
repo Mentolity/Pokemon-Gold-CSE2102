@@ -11,6 +11,7 @@ import gfx.WhiteSpace;
 public abstract class Menu{
 	public Menu last;
 	public Menu next;
+	public PackMenu PackMenus[];
 	public Option options[];
 	protected Text texts[];
 	protected Textbox boxes[];

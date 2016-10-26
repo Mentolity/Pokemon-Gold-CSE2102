@@ -4,8 +4,12 @@ import gfx.SpriteSheet;
 import gfx.StaticImage;
 
 public class PackMenuTemplate extends StaticImage{
+	public static int template[] = new SpriteSheet("/PackMenuTemplate.png").getPixels();
 	public PackMenuTemplate(){
-		pixels = new SpriteSheet("/PackMenuTemplate.png").getPixels();
-		setPos(0, 0);
+		xPos = 0;
+		yPos = 0;
+		width = 160;
+		height = 96;
+		pixels = template;
 	}
 }
