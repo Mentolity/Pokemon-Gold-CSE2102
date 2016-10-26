@@ -29,10 +29,12 @@ public abstract class PackMenu extends Menu {
 		ItemOption i = (ItemOption) options[loc];
 		if(i.quantity>1){
 			i.quantity--;
+			i.updateQuantity();
 			options[loc] = i;
 			return i.item;
 		}
 		else{
+			size--;
 			options[loc] = null;
 			for(int x=loc;x<24-loc;x++){
 				if(options[x+1]!=null) options[x] = options[x+1];
@@ -55,20 +57,22 @@ public abstract class PackMenu extends Menu {
 				else next = last.PackMenus[id-1].open();
 			}
 		}
-		else if(input.up.isPressed()){
-			if(input.up.ticksPressed()<=1){
-				if(loc==0) loc = size;
-				else loc--;
-				cursor.setPos(48,(loc*8)+9);
-			}
-		}	
-		else if(input.down.isPressed()){
-			if(input.down.ticksPressed()<=1){
-				if(loc==size) loc = 0;
-				else loc++;
-				cursor.setPos(48,(loc*8)+9);
+		if(size!=-1){
+			if(input.up.isPressed()){
+				if(input.up.ticksPressed()<=1){
+					if(loc==0) loc = size;
+					else loc--;
+					cursor.setPos(48,(loc*8)+9);
+				}
 			}	
-		}		
+			else if(input.down.isPressed()){
+				if(input.down.ticksPressed()<=1){
+					if(loc==size) loc = 0;
+					else loc++;
+					cursor.setPos(48,(loc*8)+9);
+				}	
+			}		
+		}
 	}
 	public void updateCursor() {
 		loc=0;

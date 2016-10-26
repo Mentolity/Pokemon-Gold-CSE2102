@@ -23,7 +23,7 @@ public abstract class Pokemon {
 	 * E = Effort Value (NOT IMPLEMENTED)
 	 * L = Level
 	 */
-	public Pokemon calculateStats(Pokemon p) {
+	public void calculateStats(Pokemon p) {
 		p.maxHP				=(int) Math.floor(((2*p.baseMaxHP+p.IVmaxHP)*p.level)/(110+p.level));
 		p.currentHP			= maxHP;
 		p.attack			=(int) Math.floor(((2*p.baseAttack+p.IVattack)*p.level)/(110+p.level));
@@ -31,12 +31,10 @@ public abstract class Pokemon {
 		p.specialAttack		=(int) Math.floor(((2*p.baseSpecialAttack+p.IVspecialAttack)*p.level)/(110+p.level));
 		p.specialDefense	=(int) Math.floor(((2*p.baseSpecialDefense+p.IVspecialDefense)*p.level)/(110+p.level));
 		p.speed				=(int) Math.floor(((2*p.baseSpeed+p.IVspeed)*p.level)/(110+p.level));
-		return p;
 	}
-	public Pokemon levelUp(Pokemon p) {
-		p.level += 1;
-		p = calculateStats(p);
-		return p;
+	public void levelUp() {
+		level += 1;
+		calculateStats(this);
 	}
 	public Pokemon giveItem(Item i){
 		item = i;
