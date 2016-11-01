@@ -2,6 +2,7 @@ package game;
 import gfx.Map;
 import gfx.Screen;
 import gfx.SpriteSheet;
+import gfx.WhiteSpace;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
@@ -61,7 +62,7 @@ public class Game extends Canvas implements Runnable{
 	public void init(){
 		screen = new Screen(WIDTH, HEIGHT, new SpriteSheet("/spritesheet.png"));
 		input = new InputHandler(this);
-		cont = new Controller();
+		cont = new Controller(this, screen);
 	}	
 	
 	//start method
@@ -125,16 +126,17 @@ public class Game extends Canvas implements Runnable{
 	//tick is going to update the game *the logic
 	public void tick(){
 		tickCount++;
-		cont.tick(this, screen);
+		cont.tick();
 	}
 
 	
 	//will render the game
 
 	public void render(){
-		map.render(screen);
-		cont.mc.render(screen);
+		
+		map.render(screen, cont.mc);
 		cont.menu.render(screen);
+		
 		/*
 		String msg = "This is my game!";
         Fonts.render(msg, screen, screen.xOffset + screen.width / 2 - (msg.length() * 8 / 2), screen.yOffset + screen.height / 2);

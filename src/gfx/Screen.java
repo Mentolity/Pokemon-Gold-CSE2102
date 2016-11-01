@@ -1,5 +1,6 @@
 package gfx;
 
+import game.Game;
 
 public class Screen {
 	public static final int MAP_WIDTH = 64;
@@ -20,7 +21,12 @@ public class Screen {
 		this.height = height;
 		 
 		pixels = new int[width*height];
-		
+	}
+	
+	
+	
+	public int[] getPixels(){
+		return pixels;
 	}
 	
 	public void renderSprite(int xPos, int yPos, int xtile, int ytile, SpriteSheet sheet){

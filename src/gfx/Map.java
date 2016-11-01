@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
+import game.Game;
 import maps.Doors;
 
 public class Map {
@@ -72,7 +73,7 @@ public class Map {
 	}
 	
 	public Doors onDoor(PlayerCharacter mc){
-		for(Doors d : doors ){
+		for(Doors d : doors){
 			if(d.getxPos() == mc.getxPos() && d.getyPos() == mc.getyPos()){
 				return d;
 			}
@@ -116,8 +117,127 @@ public class Map {
 		}
 	}
 	
-	public void render(Screen screen){
-		screen.renderMap(this);
+	private boolean transitioning = false;
+	private int transitionCounterEndPoint = 33;					//11 ticks fade-out, 11 ticks white, 11 ticks fade-in 
+	private int transitionCounter = transitionCounterEndPoint;
+	public void render(Screen screen, PlayerCharacter mc){
+		//if in a transition phases render that animation
+		
+		if(transitioning && transitionCounter > 0){
+			renderMapTransition(screen, mc);			
+			transitionCounter--;
+		//else render the map and mc normally
+		}else{
+			transitionCounter = transitionCounterEndPoint;
+			transitioning = false;
+			screen.renderMap(this);
+			mc.render(screen);
+		}
+	}
+	
+	
+	public void setTransitioning(){
+		transitioning = true;
+	}
+	public boolean isTransitioning(){
+		return transitioning;
+	}
+	
+	
+	public void renderMapTransition(Screen screen, PlayerCharacter mc){
+		int argb, r, g, b, rPlus, gPlus, bPlus;
+		int transitionCounter;
+		int target, rTarget, gTarget, bTarget;
+		int xPos = screen.xOffset;
+		int yPos = screen.yOffset;
+		
+		//iterate over the whole screen
+		if(this.transitionCounter > (2*transitionCounterEndPoint)/3){
+			transitionCounter = this.transitionCounter - (2*transitionCounterEndPoint)/3;
+			for(int y=0; y<screen.height; y++){
+				for(int x=0; x<screen.width; x++){
+					argb = screen.pixels[(x) + (y) * screen.width];		//got argb of current pixel
+					r = (argb>>16)&0xFF;								//r of argb
+					g = (argb>>8)&0xFF;									//g of argb
+					b = (argb>>0)&0xFF;									//b of argb
+					
+					rPlus = (255-r)/transitionCounter;					//increment values towards white
+					gPlus = (255-g)/transitionCounter;
+					bPlus = (255-b)/transitionCounter;
+					
+					
+					if(rPlus == 0 && r < 255)							//if almost white just jump there
+						rPlus = (255-r);
+					if(gPlus == 0 && g < 255)
+						gPlus = (255-g);
+					if(bPlus == 0 && b < 255)
+						bPlus = (255-b);
+	
+					if(r < 255)											//if already white don't overflow, else increment up towards white
+						argb += (rPlus<<16);
+					
+					if(g < 255)
+						argb += (gPlus<<8);
+		
+					if(b < 255)
+						argb += bPlus;	
+					
+					screen.pixels[(x) + (y) * screen.width] = argb;		//update pixel to new argb value
+				}
+			}
+		}else if(this.transitionCounter < (transitionCounterEndPoint)/3){	//Fade-in to the new map					
+			//this is current map so use mPixels for target colors
+			transitionCounter = this.transitionCounter;
+			
+			for(int y=0; y<screen.height; y++){
+				for(int x=0; x<screen.width; x++){
+					argb = screen.pixels[(x) + ((y) * screen.width)];		//get argb of current pixel
+					r = (argb>>16)&0xFF;								//r of argb
+					g = (argb>>8)&0xFF;									//g of argb
+					b = (argb>>0)&0xFF;									//b of argb
+					
+					
+					//If where outside of the defined range of the map set target to 0
+					if((x + xPos < 0 || x + xPos >= width) || (y + yPos < 0 || y + yPos >= height)){
+						target = 0x000000;	
+					}else{//else set the target to the pixel at the given point of the map
+						target = mPixels[(x+xPos) + ((y+yPos)*width)];
+					}		
+					
+					//rgb variables for target
+					rTarget = (target>>16)&0xFF;
+					gTarget = (target>>8)&0xFF;
+					bTarget = (target>>0)&0xFF;
+					
+					
+					rPlus = (rTarget-r)/transitionCounter;					//increment values towards target
+					gPlus = (gTarget-g)/transitionCounter;
+					bPlus = (bTarget-b)/transitionCounter;
+					
+					
+					if(rPlus == 0 && r > rTarget)							//if almost to target jump there
+						rPlus = (rTarget-r);
+					if(gPlus == 0 && g > gTarget)
+						gPlus = (gTarget-g);
+					if(bPlus == 0 && b > bTarget)
+						bPlus = (bTarget-b);
+	
+					if(r > rTarget)											//if already the at the don't overflow, else increment up towards the target
+						argb += (rPlus<<16);
+					
+					if(g > gTarget)
+						argb += (gPlus<<8);
+		
+					if(b > bTarget)
+						argb += bPlus;	
+					
+					screen.pixels[(x) + (y) * screen.width] = argb;		//update pixel to new argb value
+				}
+			}
+			mc.render(screen);				//render mc over fade-in
+											//Should figure out a way to do this such that mc renders only once as opposed to every transition tick <1/3EndPoint
+		}
+				
 	}
 	
 	public int[] getPixels(){
@@ -131,4 +251,6 @@ public class Map {
 	public int getHeight(){
 		return height;
 	}
+
+	
 }
