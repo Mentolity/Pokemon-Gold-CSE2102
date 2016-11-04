@@ -1,5 +1,7 @@
 package game;
 
+import save.Player;
+import save.Save;
 import maps.Doors;
 import menu.MainMenu;
 import menu.Menu;
@@ -8,20 +10,19 @@ import gfx.Screen;
 import gfx.WhiteSpace;
 
 public class Controller {
-	public Menu menu = new MainMenu();
+	public Player player;
+	public Menu menu;
 	public PlayerCharacter mc = new PlayerCharacter("/mcSpriteSheet.png");
-	Game game;
-	Screen screen;
 	
 	
-	public Controller(Game game, Screen screen){
-		this.game = game;
-		this.screen = screen;
+	public Controller(Save save){
+		player = save.user;
+		menu = new MainMenu(player);
 	}
 	
-	public void tick(){
+	public void tick(Game game, Screen screen){
 		if(!game.map.isTransitioning())
-			updatePlayerCharacter();
+			updatePlayerCharacter(game, screen);
 		
 		//check if you're on a door and if so go to that map
 		Doors d = game.map.onDoor(mc); 
@@ -40,7 +41,7 @@ public class Controller {
 		}
 	}
 	
-	private void updatePlayerCharacter(){
+	private void updatePlayerCharacter(Game game, Screen screen){
 		mc.setyPos(screen.yOffset + mc.yCenter);
 		mc.setxPos(screen.xOffset + mc.xCenter);
 		if(game.input.enter.isPressed()){

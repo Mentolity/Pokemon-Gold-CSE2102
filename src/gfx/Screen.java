@@ -1,37 +1,26 @@
 package gfx;
 
-import java.util.ArrayList;
-
-import game.Game;
 
 public class Screen {
 	public static final int MAP_WIDTH = 64;
 	public static final int MAP_WIDTH_MASK = MAP_WIDTH - 1;
-	
+	public SpriteSheet sheet = new SpriteSheet("/spritesheet.png");
 	public int[] pixels;
 	
 	public int xOffset = 360*16;
 	public int yOffset = 220*16;
-	/*public int xOffset = 4112;
-	public int yOffset = 3520;*/
+	//public int xOffset = 0;
+	//public int yOffset = 0;
 	
 	public int width;
 	public int height;
-	
-	private SpriteSheet sheet;
 	
 	public Screen(int width, int height, SpriteSheet sheet){
 		this.width = width;
 		this.height = height;
 		 
 		pixels = new int[width*height];
-		this.sheet = sheet;
-	}
-	
-	
-	
-	public int[] getPixels(){
-		return pixels;
+		
 	}
 	
 	public void renderSprite(int xPos, int yPos, int xtile, int ytile, SpriteSheet sheet){
@@ -167,35 +156,6 @@ public class Screen {
 	}
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

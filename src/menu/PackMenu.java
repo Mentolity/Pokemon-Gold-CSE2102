@@ -1,6 +1,6 @@
 package menu;
 
-import pokemon.Item;
+import items.Item;
 import game.InputHandler;
 import gfx.Textbox;
 
@@ -16,11 +16,17 @@ public abstract class PackMenu extends Menu {
 				};
 		options = new ItemOption[25];
 	}
-	public void addItem(Item i, int q){
-		size++;
+	public void addItem(ItemOption i){
 		for(int y=0;y<25;y++){
-			if(options[y]==null){
-				options[y] = new ItemOption(i,q).setPos(56, (y*9)+9);
+			ItemOption io = (ItemOption) options[y];
+			if(io!=null){ 
+				if(io.itemID==i.itemID){
+					((ItemOption) options[y]).addAmount(i.quantity);
+				}
+			}
+			if(io==null){
+				size++;
+				options[y] = i.setPos(56, (y*9)+9);
 				break;
 			}
 		}
@@ -36,7 +42,8 @@ public abstract class PackMenu extends Menu {
 		else{
 			size--;
 			options[loc] = null;
-			for(int x=loc;x<24-loc;x++){
+			for(int x=loc;x<25
+					-loc;x++){
 				if(options[x+1]!=null) options[x] = options[x+1];
 			}
 			return i.item;
@@ -57,21 +64,24 @@ public abstract class PackMenu extends Menu {
 				else next = last.PackMenus[id-1].open();
 			}
 		}
-		if(size!=-1){
+		if(size>0){
 			if(input.up.isPressed()){
 				if(input.up.ticksPressed()<=1){
 					if(loc==0) loc = size;
 					else loc--;
-					cursor.setPos(48,(loc*8)+9);
+					cursor.setPos(48,(loc*9)+9);
 				}
 			}	
 			else if(input.down.isPressed()){
 				if(input.down.ticksPressed()<=1){
 					if(loc==size) loc = 0;
 					else loc++;
-					cursor.setPos(48,(loc*8)+9);
+					cursor.setPos(48,(loc*9)+9);
 				}	
-			}		
+			}
+		}	
+		if(input.z.isPressed()){
+			if(input.z.ticksPressed()<=1) next = options[loc].select();			
 		}
 	}
 	public void updateCursor() {

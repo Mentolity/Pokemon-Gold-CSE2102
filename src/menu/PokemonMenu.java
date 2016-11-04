@@ -24,11 +24,11 @@ public class PokemonMenu extends Menu {
 		};
 	}
 
-	public void addPokemon(Pokemon p){
+	public void addPokemon(PokemonOption p){
 		size++;
 		for(int y=0;y<6;y++){
 			if(options[y]==null){
-				options[y] = new PokemonOption(p).setPos(7, (y*18)+4);
+				options[y] = p.setPos(7, (y*18)+4);
 				break;
 			}
 		}

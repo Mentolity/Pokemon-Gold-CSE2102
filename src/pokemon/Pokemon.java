@@ -1,5 +1,10 @@
 package pokemon;
 
+import status.Status;
+import items.Item;
+
+
+
 public abstract class Pokemon {
 	public String name;
 	public String description;
@@ -38,6 +43,40 @@ public abstract class Pokemon {
 		item = i;
 		return this;
 	}
+	public Item takeItem(){
+		if(item!=null){
+			Item i = item;
+			item = null;
+			return i;
+		}
+		else return null;
+	}
+	public void useItem(){
+		if(item!=null){
+			int id = item.ID;
+			item = null;
+			if(id==1){
+				currentHP+=20;
+				if(currentHP>maxHP) currentHP = maxHP;
+			}
+			else if(id==2){
+				
+			}
+		}
+	}
+	public void useItem(Item i){
+		if(i!=null){
+			int id = i.ID;
+			if(id==1){
+				currentHP+=20;
+				if(currentHP>maxHP) currentHP = maxHP;
+			}
+			else if(id==2){
+				
+			}
+		}
+	}
+
 	/* Damage = [((2L+10)/250) * (A/D) * BP + 2) * Modifier
 	 * L = level,	A = Attacker's attack, B = Defender's defense,	BP = Base power of attack
 	 * 

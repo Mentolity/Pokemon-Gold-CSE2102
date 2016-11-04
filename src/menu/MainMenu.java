@@ -1,9 +1,6 @@
 package menu;
 
-import pokemon.Bulbasaur;
-import pokemon.Charmander;
-import pokemon.Item;
-import pokemon.Squirtle;
+import save.Player;
 import game.InputHandler;
 import gfx.Text;
 import gfx.Textbox;
@@ -11,7 +8,7 @@ import gfx.WhiteSpace;
 
 public class MainMenu extends Menu {
 	public Text textsArray[][];
-	public MainMenu(){
+	public MainMenu(Player player){
 		cursor.setPos(88,12);
 		white = new WhiteSpace[]{
 				new WhiteSpace(0,100,80,44)
@@ -65,21 +62,18 @@ public class MainMenu extends Menu {
 			textsArray[y][1].setPos(8, 124);
 		}
 		texts = textsArray[0];
-		init();
+		init(player);
 	}
-	public void init(){
+	public void init(Player player){
 		PokemonMenu pokemonmenu = new PokemonMenu(this);
-		PackMenus[0].addItem(new Item("Potion"),5);
-		pokemonmenu.addPokemon(new Charmander(5).giveItem(PackMenus[0].takeItem()));
-		pokemonmenu.addPokemon(new Squirtle(5));
-		pokemonmenu.addPokemon(new Bulbasaur(5));
-		PackMenus[2].addItem(new Item("Pokeball"),1);
+		for(int x=0;x<player.items.length;x++) if(player.items[x]!=null) PackMenus[player.items[x].itemPackID].addItem(player.items[x]);
+		for(int x=0;x<player.pokemon.length;x++) if(player.pokemon[x]!=null) pokemonmenu.addPokemon(player.pokemon[x]);
 		options=new Option[]{
 				new MenuOption("Pokemon", pokemonmenu).setPos(96, 12),
 				new MenuOption("Pokedex", new PokedexMenu(this)).setPos(96, 28),
 				new MenuOption("Pack", PackMenus[0]).setPos(96, 44),
 				new MenuOption("Gear", new GearMenu(this)).setPos(96, 60),
-				new MenuOption("Player", new PlayerMenu(this)).setPos(96, 76),
+				new MenuOption(player.name, new PlayerMenu(this)).setPos(96, 76),
 				new MenuOption("Save", new SaveMenu(this)).setPos(96, 92),
 				new MenuOption("Option", new OptionMenu(this)).setPos(96, 108),
 				new MenuOption("Exit", new ExitMenu(this)).setPos(96, 124),

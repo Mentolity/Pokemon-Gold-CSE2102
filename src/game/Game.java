@@ -2,7 +2,9 @@ package game;
 import gfx.Map;
 import gfx.Screen;
 import gfx.SpriteSheet;
-import gfx.WhiteSpace;
+import items.Antidote;
+import items.Pokeball;
+import items.Potion;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
@@ -14,7 +16,16 @@ import java.awt.image.DataBufferInt;
 
 import javax.swing.JFrame;
 
+import pokemon.Bulbasaur;
+import pokemon.Charmander;
+import pokemon.Squirtle;
+import save.Player;
+import save.Save;
 import maps.MainMap;
+import menu.ItemOption;
+import menu.PokemonOption;
+import menu.SaveOption;
+import menu.TitleMenu;
 
 
 // extends the canvas to the class and implements runnables
@@ -38,6 +49,8 @@ public class Game extends Canvas implements Runnable{
 	public static Screen screen;
 	public InputHandler input;
 	public Controller cont;
+	public TitleMenu titlemenu;
+	public Save saves[];
 	
 	Map map = new MainMap();
 
@@ -62,7 +75,45 @@ public class Game extends Canvas implements Runnable{
 	public void init(){
 		screen = new Screen(WIDTH, HEIGHT, new SpriteSheet("/spritesheet.png"));
 		input = new InputHandler(this);
-		cont = new Controller(this, screen);
+		saves = new Save[]{
+				new Save(new Player("Owen", new ItemOption[]{
+					new ItemOption(new Potion(), 10),
+					new ItemOption(new Antidote(), 1),
+					new ItemOption(new Pokeball(), 5),
+			},		new PokemonOption[]{
+					new PokemonOption(new Charmander(5)),
+					new PokemonOption(new Squirtle(6)),
+					new PokemonOption(new Bulbasaur(7)),
+		})),	new Save(new Player("Ian", new ItemOption[]{
+					new ItemOption(new Potion(), 10),
+					new ItemOption(new Antidote(), 1),
+					new ItemOption(new Pokeball(), 5),
+			},		new PokemonOption[]{
+					new PokemonOption(new Charmander(5)),
+					new PokemonOption(new Squirtle(6)),
+					new PokemonOption(new Bulbasaur(7)),
+		})),	new Save(new Player("Vova", new ItemOption[]{
+					new ItemOption(new Potion(), 10),
+					new ItemOption(new Antidote(), 1),
+					new ItemOption(new Pokeball(), 5),
+			},		new PokemonOption[]{
+					new PokemonOption(new Charmander(5)),
+					new PokemonOption(new Squirtle(6)),
+					new PokemonOption(new Bulbasaur(7)),
+		})),	new Save(new Player("Kyle", new ItemOption[]{
+					new ItemOption(new Potion(), 10),
+					new ItemOption(new Antidote(), 1),
+					new ItemOption(new Pokeball(), 5),
+			},		new PokemonOption[]{
+					new PokemonOption(new Charmander(5)),
+					new PokemonOption(new Squirtle(6)),
+					new PokemonOption(new Bulbasaur(7)),
+		}))};
+		titlemenu = new TitleMenu(saves);
+		titlemenu.open();
+		for(int x=0;x<saves.length;x++){
+			titlemenu.options[x] = new SaveOption(saves[x]).setPos(16, (x*9)+9);
+		}
 	}	
 	
 	//start method
@@ -126,17 +177,25 @@ public class Game extends Canvas implements Runnable{
 	//tick is going to update the game *the logic
 	public void tick(){
 		tickCount++;
-		cont.tick();
+		if(titlemenu.isOpen()) titlemenu.navigate(input);
+		else if(cont==null){
+			SaveOption so = (SaveOption) titlemenu.options[titlemenu.loc];
+			cont = new Controller(so.save);
+		}
+		else cont.tick(this, screen);
 	}
 
 	
 	//will render the game
 
 	public void render(){
-		
-		map.render(screen, cont.mc);
-		cont.menu.render(screen);
-		
+		if(titlemenu.isOpen()) titlemenu.render(screen);
+		else{
+			if(cont!=null){
+				map.render(screen, cont.mc);
+				cont.menu.render(screen);
+			}
+		}
 		/*
 		String msg = "This is my game!";
         Fonts.render(msg, screen, screen.xOffset + screen.width / 2 - (msg.length() * 8 / 2), screen.yOffset + screen.height / 2);

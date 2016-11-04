@@ -52,11 +52,11 @@ public abstract class Menu{
 	public void render(Screen screen){
 		if(isOpen){
 			if(template!=null) screen.renderStaticImage(template);
-			if(boxes!=null) for(Textbox box : boxes){
-				if(box!=null) screen.renderStaticImage(box);
-			}
 			if(white!=null) for(WhiteSpace space : white){
 				if(space!=null) screen.renderStaticImage(space);
+			}
+			if(boxes!=null) for(Textbox box : boxes){
+				if(box!=null) screen.renderStaticImage(box);
 			}
 			if(options!=null) for(Option option : options){
 				if(option!=null) option.render(screen);

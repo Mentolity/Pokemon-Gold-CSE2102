@@ -26,4 +26,8 @@ public class Charmander extends Pokemon {
 		
 		calculateStats(this);
 	}
+
+	public Charmander() {
+		// TODO Auto-generated constructor stub
+	}
 }
