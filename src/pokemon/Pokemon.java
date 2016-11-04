@@ -1,7 +1,5 @@
 package pokemon;
 
-
-
 public abstract class Pokemon {
 	public String name;
 	public String description;
@@ -39,5 +37,15 @@ public abstract class Pokemon {
 	public Pokemon giveItem(Item i){
 		item = i;
 		return this;
+	}
+	/* Damage = [((2L+10)/250) * (A/D) * BP + 2) * Modifier
+	 * L = level,	A = Attacker's attack, B = Defender's defense,	BP = Base power of attack
+	 * 
+	 * Modifier = STAB * Type * random(.85, 1) * Critical(NOT IMPLEMENTED) * other (held items, NOT IMPLEMENTED)
+	 * STAB = 1.5 if attack same type as user, 1 otherwise
+	 * Type = type effectiveness (0 to 4)
+	 */
+	public void hit(Pokemon a, Pokemon b) {
+		
 	}
 }
