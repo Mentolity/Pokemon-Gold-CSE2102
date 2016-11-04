@@ -92,11 +92,14 @@ public class Map {
 			boolean movingDown = (xDir == 0 && yDir == 16);
 			boolean movingLeft = (xDir == -16 && yDir == 0);
 			boolean movingRight = (xDir == 16 && yDir == 0);
-			
 			switch (topLeftPixel){
 				case 0x12ff00: //Trees_GREEN
 					return false;
-				case 0x00fffc: //Water_BLUE
+				case 0x0F00FF: //Water
+					return false;
+				case 0xFFFF00: //Water
+					return false;
+				case 0x00FFFC: //Water_Ledge
 					return false;
 				case 0xff9000: //ledge_ORANGE
 					if (movingLeft) //if the the top left is orange then the only time this is pass-able is if the mc is moving left
@@ -120,6 +123,9 @@ public class Map {
 	private boolean transitioning = false;
 	private int transitionCounterEndPoint = 33;					//11 ticks fade-out, 11 ticks white, 11 ticks fade-in 
 	private int transitionCounter = transitionCounterEndPoint;
+	private int animationTickCounter = 0;
+	private int animationTickPosition = 0;
+	private final int animationTimer = 8;
 	public void render(Screen screen, PlayerCharacter mc){
 		//if in a transition phases render that animation
 		
@@ -133,6 +139,28 @@ public class Map {
 			screen.renderMap(this);
 			mc.render(screen);
 		}
+		
+		animationTickCounter++;
+		if(animationTickCounter < 5*animationTimer){
+			animationTickPosition = 0;
+		}else if(animationTickCounter < 6*animationTimer){
+			animationTickPosition = 1;
+		}else if(animationTickCounter < 11*animationTimer){
+			animationTickPosition = 2;
+		}else if(animationTickCounter < 16*animationTimer){
+			animationTickPosition = 3;
+		}else if(animationTickCounter < 21*animationTimer){
+			animationTickPosition = 2;
+		}else if(animationTickCounter < 22*animationTimer){
+			animationTickPosition = 1;
+		}else{
+			animationTickCounter = 0;
+		}
+		//System.out.println(animationTickCounter);
+	}
+	
+	public int getAnimationTickPosition(){
+		return animationTickPosition;
 	}
 	
 	
@@ -242,6 +270,10 @@ public class Map {
 	
 	public int[] getPixels(){
 		return mPixels;
+	}
+	
+	public int[] getPointPixels(){
+		return mpPixels;
 	}
 
 	public int getWidth(){
