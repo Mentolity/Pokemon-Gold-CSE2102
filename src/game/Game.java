@@ -27,6 +27,7 @@ import menu.PokemonOption;
 import menu.SaveOption;
 import menu.TitleMenu;
 
+import java.util.Hashtable;
 
 // extends the canvas to the class and implements runnables
 // not exactly sure what this means but its required to use JFrames I think
@@ -53,6 +54,11 @@ public class Game extends Canvas implements Runnable{
 	public Save saves[];
 	
 	Map map = new MainMap();
+	
+	static public Hashtable <Integer, String> musicPaths = new Hashtable <Integer, String>();
+	static public Hashtable <Integer, String> effectPaths = new Hashtable <Integer, String>();
+	
+	public static Audio audioThread;
 
 	//constructor
 	public Game(){
@@ -69,6 +75,9 @@ public class Game extends Canvas implements Runnable{
 		frame.setResizable(false); //not resizable	
 		frame.setLocationRelativeTo(null); //not relative to anything just centered	
 		frame.setVisible(true); //makes the frame visable
+		
+		audioThread = new Audio(musicPaths.get(1), audioFormat.MUSIC);
+		audioThread.start();
 	}
 	
 	//adds a new screen
@@ -220,6 +229,20 @@ public class Game extends Canvas implements Runnable{
 		
 		g.dispose();//frees up memory that the graphics object isn't using
 		bs.show(); // shows the content of the buffer
+	}
+	
+	private void assignMusicPaths (Hashtable <Integer, String> musicPaths)
+	{
+		musicPaths.put(1,"./res/newBarkTown.wav");
+		musicPaths.put(2,"./res/elmLab.wav");
+		musicPaths.put(3,"./res/route29.wav");
+		return;
+	}
+	private void assignEffectPaths (Hashtable <Integer, String> effectPaths)
+	{
+		effectPaths.put(1,"./res/bump.wav");
+		effectPaths.put(2,"./res/doorEnter.wav");
+		return;
 	}
 	
 	public static void main(String[] args){
