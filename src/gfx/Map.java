@@ -92,6 +92,31 @@ public class Map {
 			boolean movingDown = (xDir == 0 && yDir == 16);
 			boolean movingLeft = (xDir == -16 && yDir == 0);
 			boolean movingRight = (xDir == 16 && yDir == 0);
+			
+			if (topLeftPixel == 0x7F6A00)
+			{
+				if (movingLeft)
+				{
+					Game.audioThread.stopMusic();
+					Game.audioThread.restartMusic(Game.musicPaths.get(3));
+				}
+				else if (movingRight)
+				{
+					Game.audioThread.stopMusic();
+					Game.audioThread.restartMusic(Game.musicPaths.get(1));
+				}
+			}
+			
+			if (topLeftPixel == 0x12ff00 || topLeftPixel == 0x00fffc || topLeftPixel == 0xf6ff00)
+			{
+				if (ticks == 0 || (ticks % (bump.getEffectTickLength())) == 0)
+				{
+					Audio bump = new Audio(Game.effectPaths.get(1), audioFormat.EFFECT);
+					bump.start();
+				}
+			 ticks++;
+			}
+			
 			switch (topLeftPixel){
 				case 0x12ff00: //Trees_GREEN
 					return false;
@@ -283,6 +308,10 @@ public class Map {
 	public int getHeight(){
 		return height;
 	}
-
+	
+	public String getMapPath()
+	{
+		return mapPath;
+	}
 	
 }
