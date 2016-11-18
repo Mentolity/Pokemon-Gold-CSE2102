@@ -32,6 +32,21 @@ public class Controller {
 			
 			game.map = d.getMap();
 			game.map.setTransitioning();
+			
+			Audio door = new Audio (Game.effectPaths.get(2), audioFormat.EFFECT);
+			door.start();
+			
+			if (game.map.getMapPath() == "/ElmsLabMap.png")
+			{
+				Game.audioThread.stopMusic();
+				Game.audioThread.restartMusic(Game.musicPaths.get(2));
+			}
+			
+			else if (game.map.getMapPath() == "/worldMap.png")
+			{
+				Game.audioThread.stopMusic();
+				Game.audioThread.restartMusic(Game.musicPaths.get(1));	
+			}
 		}
 		
 		//debug info bound to 'P'
