@@ -109,6 +109,11 @@ public class Map {
 				Game.musicThread.switchSong(Game.musicPaths.get(3));
 			}
 			
+			else if (topLeftPixel == 0xB6FF00)
+			{
+				Game.musicThread.switchSong(Game.musicPaths.get(4));
+			}
+			
 			if (topLeftPixel == 0x12ff00 || topLeftPixel == 0x00fffc || topLeftPixel == 0xf6ff00)
 			{
 				if (ticks == 0)
