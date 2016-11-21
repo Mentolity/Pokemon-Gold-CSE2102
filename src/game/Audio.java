@@ -18,10 +18,99 @@ public class Audio extends Thread
 	
 	private long effectLength;
 	private Clip audioClip;
-	private File audioFile;
-	private AudioInputStream audioStream;
-	private AudioFormat format;
-	private DataLine.Info info;
+	
+	public enum audioFormat
+	{
+		MUSIC,EFFECT
+	}
+	
+	public Audio (String audioPath, audioFormat type)
+	{
+		this.audioPath = audioPath;
+		this.type = type;
+	}
+	
+	public void run()
+	{	
+		try
+		{
+			//initialization of things necessary for playing music
+			File audioFile = new File(audioPath);
+			AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
+			AudioFormat format = audioStream.getFormat();
+			DataLine.Info info = new DataLine.Info(Clip.class, format);
+			audioClip = (Clip) AudioSystem.getLine(info);
+			audioClip.open(audioStream);
+			
+			//loop map music indefinitely until new Audio() thread instantiated
+			if (type == audioFormat.MUSIC)
+			{
+				audioClip.loop(Clip.LOOP_CONTINUOUSLY);
+			}
+			else if (type == audioFormat.EFFECT)
+			{
+				audioClip.start();
+				//because time is in microseconds, convert to milliseconds
+				effectLength = audioClip.getMicrosecondLength();
+				Thread.sleep(effectLength/1000);
+			}
+		}
+		catch (IOException | UnsupportedAudioFileException | LineUnavailableException | InterruptedException e) 
+		{
+			System.out.println("There was a problem with playing the file");
+			e.printStackTrace();
+		}
+	}
+	
+	public void stopAudio()
+	{
+		audioClip.close();
+	}
+	
+	public void playNewSong(String audioPath)
+	{
+		try 
+		{
+			this.audioPath = audioPath;
+			File audioFile = new File(audioPath);
+			AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
+			AudioFormat format = audioStream.getFormat();
+			DataLine.Info info = new DataLine.Info(Clip.class, format);
+			audioClip = (Clip) AudioSystem.getLine(info);
+			audioClip.open(audioStream);
+			audioClip.loop(Clip.LOOP_CONTINUOUSLY);
+		}
+		catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) 
+		{
+			System.out.println("There was a problem with playing the file");
+			e.printStackTrace();
+		}
+	}
+	
+	public void switchSong(String audioPath)
+	{
+		boolean sameSong = checkSameSong(audioPath);
+		if (sameSong)
+		{
+			return;
+		}
+		stopAudio();
+		playNewSong(audioPath);
+	}
+	
+	public boolean checkSameSong(String audioPath)
+	{
+		boolean sameSong = false;
+		if (this.audioPath == audioPath)
+		{
+			return sameSong = true;
+		}
+		return sameSong;
+	}
+	public String getAudioPath()
+	{
+		return audioPath;
+	}
 	
 	public long getEffectTickLength()
 	{
@@ -45,70 +134,4 @@ public class Audio extends Thread
 		return effectTickLength;
 	}
 	
-	public enum audioFormat
-	{
-		MUSIC,EFFECT
-	}
-	
-	public Audio (String audioPath, audioFormat type)
-	{
-		this.audioPath = audioPath;
-		this.type = type;
-	}
-	
-	public void run()
-	{	
-		try
-		{
-			//initialization of things necessary for playing music
-			audioFile = new File(audioPath);
-			audioStream = AudioSystem.getAudioInputStream(audioFile);
-		    format = audioStream.getFormat();
-			info = new DataLine.Info(Clip.class, format);
-			audioClip = (Clip) AudioSystem.getLine(info);
-			audioClip.open(audioStream);
-			effectLength = audioClip.getMicrosecondLength();
-			
-			//loop map music indefinitely until new Audio() thread instantiated
-			if (type == audioFormat.MUSIC)
-			{
-				audioClip.loop(Clip.LOOP_CONTINUOUSLY);
-			}
-			else if (type == audioFormat.EFFECT)
-			{
-				audioClip.start();
-				//because time is in microseconds, convert to milliseconds
-				Thread.sleep(effectLength/1000);
-			}
-		}
-		catch (IOException | UnsupportedAudioFileException | LineUnavailableException | InterruptedException e) 
-		{
-			System.out.println("There was a problem with playing the file");
-			e.printStackTrace();
-		}
-	}
-	
-	public void stopMusic()
-	{
-		audioClip.close();
-	}
-	
-	public void restartMusic(String audioPath)
-	{
-		try 
-		{
-			audioFile = new File(audioPath);
-			audioStream = AudioSystem.getAudioInputStream(audioFile);
-		    format = audioStream.getFormat();
-			info = new DataLine.Info(Clip.class, format);
-			audioClip = (Clip) AudioSystem.getLine(info);
-			audioClip.open(audioStream);
-			audioClip.loop(Clip.LOOP_CONTINUOUSLY);
-		}
-		catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) 
-		{
-			System.out.println("There was a problem with playing the file");
-			e.printStackTrace();
-		}
-	}
 }
