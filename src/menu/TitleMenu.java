@@ -1,5 +1,6 @@
 package menu;
 
+import game.Game;
 import save.Save;
 import game.InputHandler;
 import gfx.Textbox;
@@ -42,6 +43,7 @@ public class TitleMenu extends Menu {
 	}
 	public Menu close(){
 		isOpen = false;
+		Game.musicThread.switchSong(Game.musicPaths.get(1));
 		return this;
 	}
 	public void updateCursor() {
