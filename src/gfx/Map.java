@@ -19,6 +19,10 @@ public class Map {
 	private int[] mPixels;
 	private int[] mpPixels;
 	
+	Audio bump = new Audio ("./res/bump.wav", audioFormat.EFFECT);
+	private long tickLength = bump.getEffectTickLength();
+	private long ticks = 0;
+	
 	protected ArrayList<Doors> doors = new ArrayList<Doors>();
 	public Map (String mp, String mpp){
 		BufferedImage image;
@@ -93,19 +97,7 @@ public class Map {
 			boolean movingLeft = (xDir == -16 && yDir == 0);
 			boolean movingRight = (xDir == 16 && yDir == 0);
 			
-			if (topLeftPixel == 0x7F6A00)
-			{
-				if (movingLeft)
-				{
-					Game.audioThread.stopMusic();
-					Game.audioThread.restartMusic(Game.musicPaths.get(3));
-				}
-				else if (movingRight)
-				{
-					Game.audioThread.stopMusic();
-					Game.audioThread.restartMusic(Game.musicPaths.get(1));
-				}
-			}
+			
 			
 			if (topLeftPixel == 0x12ff00 || topLeftPixel == 0x00fffc || topLeftPixel == 0xf6ff00)
 			{
