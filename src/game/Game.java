@@ -79,8 +79,7 @@ public class Game extends Canvas implements Runnable{
 		assignEffectPaths (effectPaths);
 		assignMusicPaths (musicPaths);
 		
-		music = new Audio(musicPaths.get(1), audioFormat.MUSIC);
-		musicThread.start();
+		musicThread = new Audio(musicPaths.get(5), audioFormat.MUSIC);
 	}
 	
 	//adds a new screen
@@ -239,6 +238,8 @@ public class Game extends Canvas implements Runnable{
 		musicPaths.put(1,"./res/newBarkTown.wav");
 		musicPaths.put(2,"./res/elmLab.wav");
 		musicPaths.put(3,"./res/route29.wav");
+		musicPaths.put(4,"./res/wildPokemonBattle.wav");
+		musicPaths.put(5, "./res/continue.wav");
 		return;
 	}
 	private void assignEffectPaths (Hashtable <Integer, String> effectPaths)
