@@ -9,6 +9,9 @@ import javax.imageio.ImageIO;
 import game.Game;
 import maps.Doors;
 
+import game.Audio;
+import game.Audio.audioFormat;
+
 public class Map {
 	String mapPath;
 	String mapPointPath;
