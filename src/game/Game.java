@@ -58,7 +58,7 @@ public class Game extends Canvas implements Runnable{
 	static public Hashtable <Integer, String> musicPaths = new Hashtable <Integer, String>();
 	static public Hashtable <Integer, String> effectPaths = new Hashtable <Integer, String>();
 	
-	public static Audio audioThread;
+	public static Audio musicThread;
 
 	//constructor
 	public Game(){
@@ -76,8 +76,11 @@ public class Game extends Canvas implements Runnable{
 		frame.setLocationRelativeTo(null); //not relative to anything just centered	
 		frame.setVisible(true); //makes the frame visable
 		
-		audioThread = new Audio(musicPaths.get(1), audioFormat.MUSIC);
-		audioThread.start();
+		assignEffectPaths (effectPaths);
+		assignMusicPaths (musicPaths);
+		
+		music = new Audio(musicPaths.get(1), audioFormat.MUSIC);
+		musicThread.start();
 	}
 	
 	//adds a new screen
