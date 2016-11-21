@@ -97,13 +97,24 @@ public class Map {
 			boolean movingLeft = (xDir == -16 && yDir == 0);
 			boolean movingRight = (xDir == 16 && yDir == 0);
 			
-			
+			if (topLeftPixel == 0x808080)
+			{
+				Game.musicThread.switchSong(Game.musicPaths.get(1));
+			}
+			else if (topLeftPixel == 0xB200FF)
+			{
+				Game.musicThread.switchSong(Game.musicPaths.get(3));
+			}
 			
 			if (topLeftPixel == 0x12ff00 || topLeftPixel == 0x00fffc || topLeftPixel == 0xf6ff00)
 			{
-				if (ticks == 0 || (ticks % (bump.getEffectTickLength())) == 0)
+				if (ticks == 0)
 				{
-					Audio bump = new Audio(Game.effectPaths.get(1), audioFormat.EFFECT);
+					bump.start();
+				}
+				else if (ticks % (tickLength) == 0)
+				{
+					Audio bump = new Audio (Game.effectPaths.get(1), audioFormat.EFFECT);
 					bump.start();
 				}
 			 ticks++;
