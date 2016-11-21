@@ -38,15 +38,14 @@ public class Controller {
 			
 			if (game.map.getMapPath() == "/ElmsLabMap.png")
 			{
-				Game.audioThread.stopMusic();
-				Game.audioThread.restartMusic(Game.musicPaths.get(2));
+				Game.musicThread.switchSong(Game.musicPaths.get(2));
 			}
 			
 			else if (game.map.getMapPath() == "/worldMap.png")
 			{
-				Game.audioThread.stopMusic();
-				Game.audioThread.restartMusic(Game.musicPaths.get(1));	
+				Game.musicThread.switchSong(Game.musicPaths.get(1));
 			}
+			
 		}
 		
 		//debug info bound to 'P'
