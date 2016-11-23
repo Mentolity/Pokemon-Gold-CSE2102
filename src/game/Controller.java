@@ -33,7 +33,7 @@ public class Controller {
 			game.map = d.getMap();
 			game.map.setTransitioning();
 			
-			Audio door = new Audio (Game.effectPaths.get(2), audioFormat.EFFECT);
+			Audio door = new Audio (Game.effectPaths.get(2), Audio.audioFormat.EFFECT);
 			door.start();
 			
 			if (game.map.getMapPath() == "/ElmsLabMap.png")

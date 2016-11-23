@@ -64,7 +64,8 @@ public class Audio extends Thread
 	
 	public void stopAudio()
 	{
-		audioClip.close();
+		if(audioClip != null)
+			audioClip.close();
 	}
 	
 	public void playNewSong(String audioPath)

@@ -79,7 +79,7 @@ public class Game extends Canvas implements Runnable{
 		assignEffectPaths (effectPaths);
 		assignMusicPaths (musicPaths);
 		
-		musicThread = new Audio(musicPaths.get(5), audioFormat.MUSIC);
+		musicThread = new Audio(musicPaths.get(5), Audio.audioFormat.MUSIC);
 	}
 	
 	//adds a new screen
