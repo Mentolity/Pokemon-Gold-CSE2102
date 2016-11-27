@@ -5,6 +5,7 @@ import save.Save;
 import maps.Doors;
 import menu.MainMenu;
 import menu.Menu;
+import game.Audio.audioFormat;
 import gfx.PlayerCharacter;
 import gfx.Screen;
 import gfx.WhiteSpace;
@@ -27,25 +28,16 @@ public class Controller {
 		//check if you're on a door and if so go to that map
 		Doors d = game.map.onDoor(mc); 
 		if(d != null){
+			Audio door = new Audio (AudioInit.effectPaths.get(2), Audio.audioFormat.EFFECT);
+			door.start();
+			
 			screen.xOffset = d.getxInitPos();
 			screen.yOffset = d.getyInitPos();
 			
 			game.map = d.getMap();
 			game.map.setTransitioning();
 			
-			Audio door = new Audio (Game.effectPaths.get(2), Audio.audioFormat.EFFECT);
-			door.start();
-			
-			if (game.map.getMapPath() == "/ElmsLabMap.png")
-			{
-				Game.musicThread.switchSong(Game.musicPaths.get(2));
-			}
-			
-			else if (game.map.getMapPath() == "/worldMap.png")
-			{
-				Game.musicThread.switchSong(Game.musicPaths.get(1));
-			}
-			
+			game.map.switchSongMap(game, screen);
 		}
 		
 		//debug info bound to 'P'

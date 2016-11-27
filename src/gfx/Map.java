@@ -10,6 +10,7 @@ import game.Game;
 import maps.Doors;
 
 import game.Audio;
+import game.AudioInit;
 import game.Audio.audioFormat;
 
 public class Map {
@@ -22,9 +23,8 @@ public class Map {
 	private int[] mPixels;
 	private int[] mpPixels;
 	
-	Audio bump = new Audio ("./res/bump.wav", audioFormat.EFFECT);
-	private long tickLength = bump.getEffectTickLength();
-	private long ticks = 0;
+	private int ticksEffect;
+	private long bumpLength;
 	
 	protected ArrayList<Doors> doors = new ArrayList<Doors>();
 	public Map (String mp, String mpp){
@@ -99,34 +99,6 @@ public class Map {
 			boolean movingDown = (xDir == 0 && yDir == 16);
 			boolean movingLeft = (xDir == -16 && yDir == 0);
 			boolean movingRight = (xDir == 16 && yDir == 0);
-			
-			if (topLeftPixel == 0x808080)
-			{
-				Game.musicThread.switchSong(Game.musicPaths.get(1));
-			}
-			else if (topLeftPixel == 0xB200FF)
-			{
-				Game.musicThread.switchSong(Game.musicPaths.get(3));
-			}
-			
-			else if (topLeftPixel == 0xB6FF00)
-			{
-				Game.musicThread.switchSong(Game.musicPaths.get(4));
-			}
-			
-			if (topLeftPixel == 0x12ff00 || topLeftPixel == 0x00fffc || topLeftPixel == 0xf6ff00)
-			{
-				if (ticks == 0)
-				{
-					bump.start();
-				}
-				else if (ticks % (tickLength) == 0)
-				{
-					Audio bump = new Audio (Game.effectPaths.get(1), audioFormat.EFFECT);
-					bump.start();
-				}
-			 ticks++;
-			}
 			
 			switch (topLeftPixel){
 				case 0x12ff00: //Trees_GREEN
@@ -303,6 +275,100 @@ public class Map {
 		}
 				
 	}
+	
+	private int directionToxDir (int direction)
+	{
+		int xDir;
+		
+		if (direction == 1 || direction == 3)
+		{
+			xDir = 0;
+		}
+		else if (direction == 2)
+		{
+			xDir = -16;
+		}
+		else
+		{
+			xDir = 16;
+		}
+		return xDir;
+	}
+	
+	private int directionToyDir (int direction)
+	{
+		int yDir;
+		
+		if (direction == 2 || direction == 4)
+		{
+			yDir = 0;
+		}
+		else if (direction == 1)
+		{
+			yDir = -16;
+		}
+		else
+		{
+			yDir = 16;
+		}
+		return yDir;
+	}
+	
+	public void switchSongMainMap(int direction, PlayerCharacter mc)
+	{
+		int xDir = directionToxDir(direction);
+		int yDir = directionToyDir(direction);
+		
+		int topLeftPixel = mpPixels[(mc.getxPos()+xDir + ((mc.getyPos()+yDir)*width))] & 0xffffff;
+		
+		switch (topLeftPixel)
+		{
+			case 0x808080:
+			{
+				AudioInit.musicThread.switchSong(AudioInit.musicPaths.get(1));
+				break;
+			}
+			case 0xB200FF:
+			{
+				AudioInit.musicThread.switchSong(AudioInit.musicPaths.get(3));
+				break;
+			}
+		}
+	}
+	
+	public void switchSongMap(Game game, Screen screen)
+	{
+		if (game.getMap().getMapPath() == "/ElmsLabMap.png")
+		{
+			AudioInit.musicThread.switchSong(AudioInit.musicPaths.get(2));
+		}
+		
+		else if (game.getMap().getMapPath() == "/worldMap.png")
+		{
+			AudioInit.musicThread.switchSong(AudioInit.musicPaths.get(1));
+		}
+	}
+	
+	public void playCollision()
+	{
+		/* play sound effect if number of ticks passed divisible by length of effect
+		prevents sound overlap*/
+			
+		if (ticksEffect == 0)
+		{
+			Audio bump = new Audio (AudioInit.effectPaths.get(1), audioFormat.EFFECT);
+			bump.start();
+			bumpLength = bump.getEffectTickLength();
+		}
+		else if (ticksEffect > bumpLength)
+		{
+				Audio bump = new Audio (AudioInit.effectPaths.get(1), audioFormat.EFFECT);
+				bump.start();
+				ticksEffect = 0;
+		}
+		ticksEffect++;
+		}
+	
 	
 	public int[] getPixels(){
 		return mPixels;

@@ -79,6 +79,10 @@ public class PlayerCharacter extends Character{
 					isWalking = true;
 					flag = !flag;
 					ticksWalked = 0;
+					map.switchSongMainMap(dir,this);
+				}
+				else {
+					map.playCollision();
 				}
 			}
 		}

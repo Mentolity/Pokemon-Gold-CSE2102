@@ -19,15 +19,16 @@ public class Audio extends Thread
 	private long effectLength;
 	private Clip audioClip;
 	
-	public enum audioFormat
-	{
-		MUSIC,EFFECT
-	}
-	
 	public Audio (String audioPath, audioFormat type)
 	{
 		this.audioPath = audioPath;
 		this.type = type;
+	}
+	
+	//type used to distinguish between music and sound effects
+	public enum audioFormat
+	{
+		MUSIC,EFFECT
 	}
 	
 	public void run()
@@ -42,7 +43,7 @@ public class Audio extends Thread
 			audioClip = (Clip) AudioSystem.getLine(info);
 			audioClip.open(audioStream);
 			
-			//loop map music indefinitely until new Audio() thread instantiated
+			//loop map music indefinitely until audioClip is stopped (stopAudio())
 			if (type == audioFormat.MUSIC)
 			{
 				audioClip.loop(Clip.LOOP_CONTINUOUSLY);
@@ -62,13 +63,7 @@ public class Audio extends Thread
 		}
 	}
 	
-	public void stopAudio()
-	{
-		if(audioClip != null)
-			audioClip.close();
-	}
-	
-	public void playNewSong(String audioPath)
+	private void playNewSong(String audioPath)
 	{
 		try 
 		{
@@ -99,7 +94,7 @@ public class Audio extends Thread
 		playNewSong(audioPath);
 	}
 	
-	public boolean checkSameSong(String audioPath)
+	private boolean checkSameSong(String audioPath)
 	{
 		boolean sameSong = false;
 		if (this.audioPath == audioPath)
@@ -108,11 +103,19 @@ public class Audio extends Thread
 		}
 		return sameSong;
 	}
+	
 	public String getAudioPath()
 	{
 		return audioPath;
 	}
 	
+	public void stopAudio()
+	{
+		if(audioClip != null)
+			audioClip.close();
+	}
+	
+	//gets the length in ticks of sound effects
 	public long getEffectTickLength()
 	{
 		File file = new File(audioPath);
@@ -135,4 +138,10 @@ public class Audio extends Thread
 		return effectTickLength;
 	}
 	
+	/*public void restartEffect()
+	{
+		audioClip.setFramePosition(0);
+		audioClip.start();
+	}
+	*/
 }
