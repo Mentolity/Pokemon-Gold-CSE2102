@@ -136,7 +136,6 @@ public class Map {
 	private final int animationTimer = 8;
 	public void render(Screen screen, PlayerCharacter mc){
 		//if in a transition phases render that animation
-		
 		if(transitioning && transitionCounter > 0){
 			renderMapTransition(screen, mc);			
 			transitionCounter--;
@@ -146,6 +145,7 @@ public class Map {
 			transitioning = false;
 			screen.renderMap(this);
 			mc.render(screen);
+			screen.renderMapAnimationLayer(this);
 		}
 		
 		animationTickCounter++;

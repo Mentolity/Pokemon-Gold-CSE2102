@@ -1,5 +1,7 @@
 package menu;
 
+import game.Audio;
+import game.AudioInit;
 import game.Game;
 import save.Save;
 import game.InputHandler;
@@ -43,7 +45,7 @@ public class TitleMenu extends Menu {
 	}
 	public Menu close(){
 		isOpen = false;
-		Game.musicThread.switchSong(Game.musicPaths.get(1));
+		Game.audioPaths.musicThread.switchSong(Game.audioPaths.musicPaths.get(1));
 		return this;
 	}
 	public void updateCursor() {

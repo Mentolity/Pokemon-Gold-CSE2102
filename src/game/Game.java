@@ -54,6 +54,8 @@ public class Game extends Canvas implements Runnable{
 	public Save saves[];
 	
 	Map map = new MainMap();
+	
+	public static AudioInit audioPaths = new AudioInit();
 
 	//constructor
 	public Game(){
@@ -71,7 +73,6 @@ public class Game extends Canvas implements Runnable{
 		frame.setLocationRelativeTo(null); //not relative to anything just centered	
 		frame.setVisible(true); //makes the frame visable
 		
-		AudioInit audioPaths = new AudioInit();
 		audioPaths.initMusicThread();
 	}
 	

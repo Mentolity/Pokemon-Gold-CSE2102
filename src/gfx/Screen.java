@@ -94,12 +94,12 @@ public class Screen {
 			}
 		}
 		
-		renderMapAnimation(xPos, yPos, map);
+		
 	}
 	
 	//after the rendering the map render the current animation phase over it
 	//check if the current pixel in the map.mpPixels is 0x0f00ff and if so render water animation
-	public void renderMapAnimation(int xPos, int yPos, Map map){	
+	private void renderMapAnimation(int xPos, int yPos, Map map){	
 		//render over the whole visible screen and 1 extra tile in every direction off the screen
 		//this is to render animation tiles that are partially clipped
 		for(int y=-16; y<height+16; y++){
@@ -130,12 +130,20 @@ public class Screen {
 							break;
 						}
 					}
+					renderLayeredGrass(x, y, 6, 0, 16, 16, map);
 				}	
 			}
 		}
 	}
 	
-	public void renderWaterAnimation(int xPos, int yPos, int xTile, int yTile, int spriteWidth, int spriteHeight, Map map){	
+	public void renderMapAnimationLayer(Map map){	
+		renderMapAnimation(xOffset, yOffset, map);
+	}
+	
+	//DRY!
+	//If I wasn't so lazy the below two methods could be merged into 1 general case.
+	
+	private void renderWaterAnimation(int xPos, int yPos, int xTile, int yTile, int spriteWidth, int spriteHeight, Map map){	
 		for(int y=0; y<spriteHeight; y++){
 			if(y + yPos < 0 || y + yPos >= height) continue;
 			for(int x=0; x<spriteWidth; x++){
@@ -155,6 +163,30 @@ public class Screen {
 		}
 	}
 	
+	private void renderLayeredGrass(int xPos, int yPos, int xTile, int yTile, int spriteWidth, int spriteHeight, Map map){		
+		//Only add the sprite once per tile starting at the top left
+		if ((xOffset+xPos) % 16 != 0 || (yOffset+yPos) % 16 != 0)
+			return;
+		
+		for(int y=0; y<spriteHeight; y++){
+			if(y + yPos < 0 || y + yPos >= height) continue;
+			for(int x=0; x<spriteWidth; x++){
+				if(x + xPos < 0 || x + xPos >= width) continue;
+				int col = sheet.getPixels()[x+(xTile*16) + ((y+(yTile*16)) * sheet.getWidth())];
+				
+				if (((col & 0xffffff) != 0xff00ff) && ((col & 0xffffff) != 0x7f007f)){//removes the sprite sheets grid colors
+					int mapColor = map.getPointPixels()[x+xPos+xOffset + ((y+yPos+yOffset)*map.getWidth())];
+					int mapColorRight1 = map.getPointPixels()[x+xPos+xOffset+1 + ((y+yPos+yOffset)*map.getWidth())];
+					if (mapColor == 0xFFFFFF00 && mapColorRight1 != 0xFF0F00FF)
+						continue;
+					//if tile is a grass tile add the layered grass sprite
+					if(mapColor == 0xFF227700){
+						pixels[(x+xPos) + (y+yPos) * width] = col;
+					}
+				}
+			}
+		}
+	}	
 }
 
 
