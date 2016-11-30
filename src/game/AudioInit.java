@@ -18,17 +18,17 @@ public class AudioInit {
 	
 	private void assignMusicPaths (Hashtable <Integer, String> musicPaths)
 	{
-		musicPaths.put(1,"./res/newBarkTown.wav");
-		musicPaths.put(2,"./res/elmLab.wav");
-		musicPaths.put(3,"./res/route29.wav");
-		musicPaths.put(4,"./res/wildPokemonBattle.wav");
-		musicPaths.put(5,"./res/continue.wav");
+		musicPaths.put(1,"/newBarkTown.wav");
+		musicPaths.put(2,"/elmLab.wav");
+		musicPaths.put(3,"/route29.wav");
+		musicPaths.put(4,"/wildPokemonBattle.wav");
+		musicPaths.put(5,"/continue.wav");
 		return;
 	}
 	private void assignEffectPaths (Hashtable <Integer, String> effectPaths)
 	{
-		effectPaths.put(1,"./res/bump.wav");
-		effectPaths.put(2,"./res/doorEnter.wav");
+		effectPaths.put(1,"/bump.wav");
+		effectPaths.put(2,"/doorEnter.wav");
 		return;
 	}
 

@@ -1,5 +1,6 @@
 package gfx;
 
+import game.Game;
 import game.InputHandler;
 import game.InputHandler.Key;
 
@@ -15,6 +16,8 @@ public class PlayerCharacter extends Character{
 	private int ticksWalked = 0;
 	private int turnDelay = 7;
 	private boolean flag = false; //used to alternate up/down walking sprites
+	
+	private int offsetIncrement = 1;
 			
 	
 	public PlayerCharacter(String spritePath){
@@ -33,26 +36,25 @@ public class PlayerCharacter extends Character{
 		if(isWalking){
 			if(ticksWalked != 16){
 				if(input.getLastPressed() == input.up){
-					screen.yOffset--;
+					screen.yOffset-=offsetIncrement;
 					ticksWalked++;
 					return;
 				}
 				if(input.getLastPressed() == input.down){
-					screen.yOffset++;
+					screen.yOffset+=offsetIncrement;
 					ticksWalked++;
 					return;
 				}
 				if(input.getLastPressed() == input.left){
-					screen.xOffset--;
+					screen.xOffset-=offsetIncrement;
 					ticksWalked++;
 					return;
 				}
 				if(input.getLastPressed() == input.right){
-					screen.xOffset++;
+					screen.xOffset+=offsetIncrement;
 					ticksWalked++;
 					return;
-				}
-				
+				}	
 			}else{
 				isWalking = false;
 			}
@@ -79,9 +81,13 @@ public class PlayerCharacter extends Character{
 					isWalking = true;
 					flag = !flag;
 					ticksWalked = 0;
+					offsetIncrement = 1;
 					map.switchSongMainMap(dir,this);
-				}
-				else {
+				}else if(check.ticksPressed() > 16){
+					isWalking = true;
+					flag = !flag;
+					ticksWalked = 0;
+					offsetIncrement = 0;
 					map.playCollision();
 				}
 			}

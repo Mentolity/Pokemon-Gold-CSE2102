@@ -1,5 +1,6 @@
 package game;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -37,7 +38,7 @@ public class Audio extends Thread
 		{
 			//initialization of things necessary for playing music
 			File audioFile = new File(audioPath);
-			AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
+			AudioInputStream audioStream = AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream(audioPath)));
 			AudioFormat format = audioStream.getFormat();
 			DataLine.Info info = new DataLine.Info(Clip.class, format);
 			audioClip = (Clip) AudioSystem.getLine(info);
@@ -69,7 +70,7 @@ public class Audio extends Thread
 		{
 			this.audioPath = audioPath;
 			File audioFile = new File(audioPath);
-			AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
+			AudioInputStream audioStream = AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream(audioPath)));
 			AudioFormat format = audioStream.getFormat();
 			DataLine.Info info = new DataLine.Info(Clip.class, format);
 			audioClip = (Clip) AudioSystem.getLine(info);
@@ -118,20 +119,19 @@ public class Audio extends Thread
 	//gets the length in ticks of sound effects
 	public long getEffectTickLength()
 	{
-		File file = new File(audioPath);
+		/*File file = new File(audioPath);*/
 		AudioInputStream audioInputStream = null;
+		AudioFormat format = null;
 		try 
 		{
-			audioInputStream = AudioSystem.getAudioInputStream(file);
+			audioInputStream = AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream(audioPath)));
+			format = audioInputStream.getFormat();
 		} 
-		catch (UnsupportedAudioFileException e) 
-		{
-			e.printStackTrace();
-		} catch (IOException e) 
+		catch (Exception e) 
 		{
 			e.printStackTrace();
 		}
-		AudioFormat format = audioInputStream.getFormat();
+		
 		long frames = audioInputStream.getFrameLength();
 		double durationInSeconds = (frames+0.0) / format.getFrameRate();  
 		long effectTickLength = (long) durationInSeconds * 60;

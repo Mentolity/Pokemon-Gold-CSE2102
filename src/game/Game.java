@@ -53,7 +53,7 @@ public class Game extends Canvas implements Runnable{
 	public TitleMenu titlemenu;
 	public Save saves[];
 	
-	Map map = new MainMap();
+	public static Map map = new MainMap();
 	
 	public static AudioInit audioPaths = new AudioInit();
 
