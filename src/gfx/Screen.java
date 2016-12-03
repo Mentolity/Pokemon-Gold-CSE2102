@@ -8,7 +8,9 @@ public class Screen {
 	public int[] pixels;
 	
 	public int xOffset = 360*16;
-	public int yOffset = 220*16;
+	public int yOffset = 220*16;/*
+	public int xOffset = 4352;
+	public int yOffset = 3472;*/
 	//public int xOffset = 0;
 	//public int yOffset = 0;
 	
@@ -112,7 +114,7 @@ public class Screen {
 					//System.out.println("y+yPos: " + (y+yPos));
 					int col = map.getPointPixels()[x+xPos + ((y+yPos)*map.getWidth())];
 					if(col == 0xFFFFFF00){//if yellow render the water animation starting from that point
-						switch(map.getAnimationTickPosition()){
+						switch(map.getWaterAnimationTickPosition()){
 						case 0: 
 							renderWaterAnimation(x, y, 5, 0, 16, 16, map);
 							break;
@@ -130,18 +132,54 @@ public class Screen {
 							break;
 						}
 					}
-					renderLayeredGrass(x, y, 6, 0, 16, 16, map);
+					if(col == 0xFFAA4433){//if rust render the flower animation starting at that point
+						if(map.getFlowerAnimationTickPosition() == 0){
+							renderFlowerAnimation(x, y, 7, 0, 16, 32, map);
+						}else if(map.getFlowerAnimationTickPosition() == 1){
+							renderFlowerAnimation(x, y, 8, 0, 16, 32, map);
+						}
+					}
+					
+					
 				}	
 			}
 		}
 	}
 	
-	public void renderMapAnimationLayer(Map map){	
+	public void renderMapBackgroundAnimationLayer(Map map){	
 		renderMapAnimation(xOffset, yOffset, map);
 	}
 	
+	public void renderMapForegroundAnimationLayer(Map map){
+		for(int y=-16; y<height+16; y++){
+			for(int x=-16; x<width+16; x++){
+				if((x + xOffset < 0 || x + xOffset >= map.getWidth()) || (y + yOffset < 0 || y + yOffset >= map.getHeight())){
+					continue;
+				}else{
+					renderLayeredGrass(x, y, 6, 0, 16, 16, map);
+				}
+			}
+		}
+	}
+	
 	//DRY!
-	//If I wasn't so lazy the below two methods could be merged into 1 general case.
+	//If I wasn't so lazy the below three methods could be merged into 1 general case.
+	
+	private void renderFlowerAnimation(int xPos, int yPos, int xTile, int yTile, int spriteWidth, int spriteHeight, Map map){	
+		for(int y=0; y<spriteHeight; y++){
+			if(y + yPos < 0 || y + yPos >= height) continue;
+			for(int x=0; x<spriteWidth; x++){
+				if(x + xPos < 0 || x + xPos >= width) continue;
+				int col = sheet.getPixels()[x+(xTile*16) + ((y+(yTile*16)) * sheet.getWidth())];
+				if (((col & 0xffffff) != 0xff00ff) && ((col & 0xffffff) != 0x7f007f)){//removes the sprite sheets grid colors
+					int mapColor = map.getPointPixels()[x+xPos+xOffset + ((y+yPos+yOffset)*map.getWidth())];
+					if(mapColor == 0xFFAA4433 || mapColor == 0xFFAAAA00){
+						pixels[(x+xPos) + (y+yPos) * width] = col;
+					}
+				}
+			}
+		}
+	}
 	
 	private void renderWaterAnimation(int xPos, int yPos, int xTile, int yTile, int spriteWidth, int spriteHeight, Map map){	
 		for(int y=0; y<spriteHeight; y++){

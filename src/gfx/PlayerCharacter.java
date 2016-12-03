@@ -60,7 +60,6 @@ public class PlayerCharacter extends Character{
 			}
 		}
 		
-		//Bug with holding multiple keys at once allows u to phase through walls. Need fix.
 		//Logic for turning w/o moving and for moving to the next tile
 		move(input.left, 2, input.up, input.down, input.right, map);
 		move(input.right, 4, input.up, input.down, input.left, map);

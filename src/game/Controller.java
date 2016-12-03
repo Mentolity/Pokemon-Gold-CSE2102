@@ -27,7 +27,7 @@ public class Controller {
 		
 		//check if you're on a door and if so go to that map
 		Doors d = game.map.onDoor(mc); 
-		if(d != null){
+		if(d != null && !game.map.isTransitioning()){
 			Audio door = new Audio (AudioInit.effectPaths.get(2), Audio.audioFormat.EFFECT);
 			door.start();
 			

@@ -131,8 +131,12 @@ public class Map {
 	private boolean transitioning = false;
 	private int transitionCounterEndPoint = 33;					//11 ticks fade-out, 11 ticks white, 11 ticks fade-in 
 	private int transitionCounter = transitionCounterEndPoint;
-	private int animationTickCounter = 0;
-	private int animationTickPosition = 0;
+	private int waterAnimationTickCounter = 0;
+	private int waterAnimationTickPosition = 0;
+	
+	private int flowerAnimationTickCounter = 0;
+	private int flowerAnimationTickPosition = 0;
+	
 	private final int animationTimer = 8;
 	public void render(Screen screen, PlayerCharacter mc){
 		//if in a transition phases render that animation
@@ -144,31 +148,45 @@ public class Map {
 			transitionCounter = transitionCounterEndPoint;
 			transitioning = false;
 			screen.renderMap(this);
+			screen.renderMapBackgroundAnimationLayer(this);
 			mc.render(screen);
-			screen.renderMapAnimationLayer(this);
+			screen.renderMapForegroundAnimationLayer(this);
 		}
 		
-		animationTickCounter++;
-		if(animationTickCounter < 5*animationTimer){
-			animationTickPosition = 0;
-		}else if(animationTickCounter < 6*animationTimer){
-			animationTickPosition = 1;
-		}else if(animationTickCounter < 11*animationTimer){
-			animationTickPosition = 2;
-		}else if(animationTickCounter < 16*animationTimer){
-			animationTickPosition = 3;
-		}else if(animationTickCounter < 21*animationTimer){
-			animationTickPosition = 2;
-		}else if(animationTickCounter < 22*animationTimer){
-			animationTickPosition = 1;
+		waterAnimationTickCounter++;
+		if(waterAnimationTickCounter < 5*animationTimer){
+			waterAnimationTickPosition = 0;
+		}else if(waterAnimationTickCounter < 6*animationTimer){
+			waterAnimationTickPosition = 1;
+		}else if(waterAnimationTickCounter < 11*animationTimer){
+			waterAnimationTickPosition = 2;
+		}else if(waterAnimationTickCounter < 16*animationTimer){
+			waterAnimationTickPosition = 3;
+		}else if(waterAnimationTickCounter < 21*animationTimer){
+			waterAnimationTickPosition = 2;
+		}else if(waterAnimationTickCounter < 22*animationTimer){
+			waterAnimationTickPosition = 1;
 		}else{
-			animationTickCounter = 0;
+			waterAnimationTickCounter = 0;
+		}
+		
+		flowerAnimationTickCounter++;
+		if(flowerAnimationTickCounter < 4*animationTimer){
+			flowerAnimationTickPosition = 0;
+		}else if(flowerAnimationTickCounter < 8*animationTimer){
+			flowerAnimationTickPosition = 1;
+		}else{
+			flowerAnimationTickCounter = 0;
 		}
 		//System.out.println(animationTickCounter);
 	}
 	
-	public int getAnimationTickPosition(){
-		return animationTickPosition;
+	public int getWaterAnimationTickPosition(){
+		return waterAnimationTickPosition;
+	}
+	
+	public int getFlowerAnimationTickPosition(){
+		return flowerAnimationTickPosition;
 	}
 	
 	
