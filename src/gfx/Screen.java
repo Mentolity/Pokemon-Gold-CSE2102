@@ -7,10 +7,10 @@ public class Screen {
 	public SpriteSheet sheet = new SpriteSheet("/spritesheet.png");
 	public int[] pixels;
 	
-	public int xOffset = 360*16;
-	public int yOffset = 220*16;/*
+	/*public int xOffset = 360*16;
+	public int yOffset = 220*16;*/
 	public int xOffset = 4352;
-	public int yOffset = 3472;*/
+	public int yOffset = 3472;
 	//public int xOffset = 0;
 	//public int yOffset = 0;
 	

@@ -3,6 +3,7 @@ package gfx;
 import game.Game;
 import game.InputHandler;
 import game.InputHandler.Key;
+import maps.InteractableObject;
 
 public class PlayerCharacter extends Character{
 	public final int xCenter = 16*4;
@@ -65,6 +66,10 @@ public class PlayerCharacter extends Character{
 		move(input.right, 4, input.up, input.down, input.left, map);
 		move(input.up, 1, input.down, input.left, input.right, map);
 		move(input.down, 3, input.up, input.left, input.right, map);
+	}
+	
+	public InteractableObject interact(Screen screen, Map map){
+		return map.isTileInteractable(direction, this);
 	}
 	
 	private void move(Key check, int dir, Key k1, Key k2, Key k3, Map map){

@@ -1,7 +1,5 @@
 package menu;
 
-import game.Audio;
-import game.AudioInit;
 import game.Game;
 import save.Save;
 import game.InputHandler;
@@ -31,17 +29,15 @@ public class TitleMenu extends Menu {
 				else loc--;
 				cursor.setPos(8,(loc*9)+9);
 			}	
-		}
-		else if(input.down.isPressed()){
+		}else if(input.down.isPressed()){
 			if(input.down.ticksPressed()<=1){
 				if(loc==size) loc = 0;
 				else loc++;
 				cursor.setPos(8,(loc*9)+9);
 			}	
 		}
-		if(input.z.isPressed()){
-			if(input.z.ticksPressed()>1) close();		
-		}
+		if(input.z.isPressed() && input.z.ticksPressed()<=1) 
+			close();		
 	}
 	public Menu close(){
 		isOpen = false;

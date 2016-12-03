@@ -1,5 +1,6 @@
 package game;
 
+import gfx.DialogBox;
 import gfx.Map;
 import gfx.Screen;
 import gfx.SpriteSheet;
@@ -49,7 +50,7 @@ public class Game extends Canvas implements Runnable{
 	
 	public static Screen screen;
 	public InputHandler input;
-	public Controller cont;
+	public static Controller cont;
 	public TitleMenu titlemenu;
 	public Save saves[];
 	
@@ -182,29 +183,32 @@ public class Game extends Canvas implements Runnable{
 	//tick is going to update the game *the logic
 	public void tick(){
 		tickCount++;
-		if(titlemenu.isOpen()) titlemenu.navigate(input);
-		else if(cont==null){
+		if(titlemenu.isOpen()){
+			titlemenu.navigate(input);
+		}else if(cont==null){
 			SaveOption so = (SaveOption) titlemenu.options[titlemenu.loc];
 			cont = new Controller(so.save);
+		}else{
+			cont.tick(this, screen);
 		}
-		else cont.tick(this, screen);
 	}
 
 	
 	//will render the game
+	
 
 	public void render(){
+		
 		if(titlemenu.isOpen()) titlemenu.render(screen);
 		else{
 			if(cont!=null){
 				map.render(screen, cont.mc);
 				cont.menu.render(screen);
+				if(cont.interactableObject != null)
+					cont.interactableObject.getDialogBox().render(screen);
 			}
 		}
-		/*
-		String msg = "This is my game!";
-        Fonts.render(msg, screen, screen.xOffset + screen.width / 2 - (msg.length() * 8 / 2), screen.yOffset + screen.height / 2);
-		 */		
+			
 		
 		BufferStrategy bs = getBufferStrategy(); //An object that allows us to organize the data on the canvas
 		if(bs == null){
@@ -227,8 +231,7 @@ public class Game extends Canvas implements Runnable{
 		bs.show(); // shows the content of the buffer
 	}
 	
-	public Map getMap()
-	{
+	public Map getMap(){
 		return map;
 	}
 	

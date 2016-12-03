@@ -54,7 +54,8 @@ public class InputHandler implements KeyListener{
 			enter.toggle(true);
 		}
 		if(keycode == KeyEvent.VK_Z){
-			z.toggle(true);
+			if(!(up.isPressed() || right.isPressed() || down.isPressed() || left.isPressed()))
+				z.toggle(true);
 		}
 		toggleKey(keycode, true);
 	}
@@ -86,8 +87,13 @@ public class InputHandler implements KeyListener{
 		if(keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT){
 			right.toggle(isPressed);
 		}
+		if(keyCode == KeyEvent.VK_Z){
+			if(!(up.isPressed() || right.isPressed() || down.isPressed() || left.isPressed()))
+				z.toggle(isPressed);
+		}
 		if(keyCode == KeyEvent.VK_P){
-			debug.toggle(isPressed);
+			if(!(up.isPressed() || right.isPressed() || down.isPressed() || left.isPressed()))
+				debug.toggle(isPressed);
 		}
 	}
 	

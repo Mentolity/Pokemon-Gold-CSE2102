@@ -2,10 +2,12 @@ package game;
 
 import save.Player;
 import save.Save;
-import maps.Doors;
+import maps.Door;
+import maps.InteractableObject;
 import menu.MainMenu;
 import menu.Menu;
 import game.Audio.audioFormat;
+import gfx.DialogBox;
 import gfx.PlayerCharacter;
 import gfx.Screen;
 import gfx.WhiteSpace;
@@ -14,7 +16,7 @@ public class Controller {
 	public Player player;
 	public Menu menu;
 	public PlayerCharacter mc = new PlayerCharacter("/mcSpriteSheet.png");
-	
+	public InteractableObject interactableObject;
 	
 	public Controller(Save save){
 		player = save.user;
@@ -26,7 +28,7 @@ public class Controller {
 			updatePlayerCharacter(game, screen);
 		
 		//check if you're on a door and if so go to that map
-		Doors d = game.map.onDoor(mc); 
+		Door d = game.map.onDoor(mc); 
 		if(d != null && !game.map.isTransitioning()){
 			Audio door = new Audio (AudioInit.effectPaths.get(2), Audio.audioFormat.EFFECT);
 			door.start();
@@ -40,6 +42,17 @@ public class Controller {
 			game.map.switchSongMap(game, screen);
 		}
 		
+		if(interactableObject != null){
+			if(interactableObject.getDialogBox().shouldClose()){
+				interactableObject.getDialogBox().resetDialogBox();
+				interactableObject = null;
+				
+			}
+				
+			if(game.input.z.isPressed() && game.input.z.ticksPressed() <= 1)
+				interactableObject.getDialogBox().NextLine();			
+		}
+		
 		//debug info bound to 'P'
 		if(game.input.debug.isPressed() && game.input.debug.ticksPressed() <= 1){
 			System.out.println("PC Position: " + mc.getxPos() + ", " + mc.getyPos());
@@ -49,24 +62,23 @@ public class Controller {
 	
 	private void updatePlayerCharacter(Game game, Screen screen){
 		mc.setyPos(screen.yOffset + mc.yCenter);
-		mc.setxPos(screen.xOffset + mc.xCenter);
-		if(game.input.enter.isPressed()){
-			if(game.input.enter.ticksPressed()<=1){
+		mc.setxPos(screen.xOffset + mc.xCenter);	
+		
+		if(game.input.enter.isPressed() && game.input.enter.ticksPressed()<=1){
 				if(!menu.isOpen()){
 					menu.updateCursor();
 					menu.open();
-				}
-				else{
+				}else{
 					Menu opt = menu;
 					menu = menu.goUp();
-					if(menu!=null) menu.updateCursor();
-					else{
+					if(menu!=null) {
+						menu.updateCursor();
+					}else{
 						menu = opt;
 						menu.close();
 					}	
 				}
-			}	
-		}
+		}		
 		if(menu.isOpen()){
 			menu.navigate(game.input);
 			if(menu.next!=null){
@@ -74,7 +86,33 @@ public class Controller {
 				menu.next = null;
 				menu = m;
 			}
+		}else if(interactableObject != null){
+			if(!interactableObject.getDialogBox().shouldClose())
+				return;
+		}else if(game.input.z.isPressed() && game.input.z.ticksPressed() <= 1){
+			interactableObject = mc.interact(screen, game.map);
+		}else{
+			mc.walk(game.input, screen, game.map);
 		}
-		else mc.walk(game.input, screen, game.map);
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

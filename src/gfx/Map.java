@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 import game.Game;
-import maps.Doors;
-
+import maps.Door;
+import maps.InteractableObject;
 import game.Audio;
 import game.AudioInit;
 import game.Audio.audioFormat;
@@ -26,7 +26,10 @@ public class Map {
 	private int ticksEffect;
 	private long bumpLength;
 	
-	protected ArrayList<Doors> doors = new ArrayList<Doors>();
+	//At some point should replace with more efficient data-structure for retrieving elements
+	protected ArrayList<Door> doors = new ArrayList<Door>();
+	protected ArrayList<InteractableObject> interactableObjects = new ArrayList<InteractableObject>();
+	
 	public Map (String mp, String mpp){
 		BufferedImage image;
 		
@@ -47,6 +50,58 @@ public class Map {
 			
 		}
 	}
+	
+	public InteractableObject isTileInteractable(int direction, PlayerCharacter mc){
+		switch (direction){
+			case 1:
+				return isUpInteractable(mc);
+			case 2:
+				return isLeftInteractable(mc);
+			case 3: 
+				return isDownInteractable(mc);
+			case 4:
+				return isRightInteractable(mc);
+			default:
+				return null;
+		}
+	}
+	
+	public InteractableObject isUpInteractable(PlayerCharacter mc){
+		return isInteractable(mc, 0, -16);
+	}
+	
+	public InteractableObject isDownInteractable(PlayerCharacter mc){
+		return isInteractable(mc, 0, 16);
+	}
+	
+	public InteractableObject isLeftInteractable(PlayerCharacter mc){
+		return isInteractable(mc, -16, 0);
+	}
+	
+	public InteractableObject isRightInteractable(PlayerCharacter mc){
+		return isInteractable(mc, 16, 0);
+	}
+	
+	private InteractableObject isInteractable(PlayerCharacter mc, int xDir, int yDir){
+		boolean movingUp = (xDir == 0 && yDir == -16);
+		boolean movingDown = (xDir == 0 && yDir == 16);
+		boolean movingLeft = (xDir == -16 && yDir == 0);
+		boolean movingRight = (xDir == 16 && yDir == 0);
+		
+		for(InteractableObject i : interactableObjects){
+			if(movingUp && mc.getxPos() == i.getxPos() && mc.getyPos()-16 == i.getyPos())
+				return i;
+			if(movingDown && mc.getxPos() == i.getxPos() && mc.getyPos()+16 == i.getyPos())
+				return i;
+			if(movingRight && mc.getxPos()+16 == i.getxPos() && mc.getyPos() == i.getyPos())
+				return i;
+			if(movingLeft && mc.getxPos()-16 == i.getxPos() && mc.getyPos() == i.getyPos())
+				return i;
+		}
+		return null;
+	}
+	
+	
 	
 	public boolean isPassable(int direction, PlayerCharacter mc){
 		switch (direction){
@@ -79,8 +134,8 @@ public class Map {
 		return isPassable(mc, 16, 0);
 	}
 	
-	public Doors onDoor(PlayerCharacter mc){
-		for(Doors d : doors){
+	public Door onDoor(PlayerCharacter mc){
+		for(Door d : doors){
 			if(d.getxPos() == mc.getxPos() && d.getyPos() == mc.getyPos()){
 				return d;
 			}
