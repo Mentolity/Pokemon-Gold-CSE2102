@@ -10,6 +10,7 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.BufferedInputStream;
 
 public class Effect extends Thread
 {
@@ -27,7 +28,7 @@ public class Effect extends Thread
 		{
 			//initialization of things necessary for playing music
 			File audioFile = new File(audioPath);
-			AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
+			AudioInputStream audioStream = AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream(audioPath)));
 			AudioFormat format = audioStream.getFormat();
 			DataLine.Info info = new DataLine.Info(Clip.class, format);
 			audioClip = (Clip) AudioSystem.getLine(info);
