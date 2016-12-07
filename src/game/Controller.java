@@ -6,8 +6,8 @@ import maps.Door;
 import maps.InteractableObject;
 import menu.MainMenu;
 import menu.Menu;
-import game.Audio.audioFormat;
 import gfx.DialogBox;
+import gfx.Map;
 import gfx.PlayerCharacter;
 import gfx.Screen;
 import gfx.WhiteSpace;
@@ -17,6 +17,7 @@ public class Controller {
 	public Menu menu;
 	public PlayerCharacter mc = new PlayerCharacter("/mcSpriteSheet.png");
 	public InteractableObject interactableObject;
+	public Map previousMap = Game.map;
 	
 	public Controller(Save save){
 		player = save.user;
@@ -30,27 +31,25 @@ public class Controller {
 		//check if you're on a door and if so go to that map
 		Door d = game.map.onDoor(mc); 
 		if(d != null && !game.map.isTransitioning()){
-			Audio door = new Audio (AudioInit.effectPaths.get(2), Audio.audioFormat.EFFECT);
-			door.start();
-			
 			screen.xOffset = d.getxInitPos();
 			screen.yOffset = d.getyInitPos();
 			
 			game.map = d.getMap();
 			game.map.setTransitioning();
 			
-			game.map.switchSongMap(game, screen);
+			game.map.switchSongMap(game, screen, previousMap);
+			previousMap = d.getMap();
 		}
 		
-		if(interactableObject != null){
+		if(interactableObject != null){			
 			if(interactableObject.getDialogBox().shouldClose()){
 				interactableObject.getDialogBox().resetDialogBox();
 				interactableObject = null;
-				
 			}
-				
 			if(game.input.z.isPressed() && game.input.z.ticksPressed() <= 1)
-				interactableObject.getDialogBox().NextLine();			
+			{
+				interactableObject.getDialogBox().NextLine();
+			}
 		}
 		
 		//debug info bound to 'P'
@@ -68,6 +67,8 @@ public class Controller {
 				if(!menu.isOpen()){
 					menu.updateCursor();
 					menu.open();
+					Effect openMenu = new Effect (AudioInit.effectPaths.get(5));
+					openMenu.start();
 				}else{
 					Menu opt = menu;
 					menu = menu.goUp();
@@ -91,6 +92,11 @@ public class Controller {
 				return;
 		}else if(game.input.z.isPressed() && game.input.z.ticksPressed() <= 1){
 			interactableObject = mc.interact(screen, game.map);
+			if (interactableObject != null)
+			{
+				Effect menuSelect = new Effect (AudioInit.effectPaths.get(4));
+				menuSelect.start();
+			}
 		}else{
 			mc.walk(game.input, screen, game.map);
 		}

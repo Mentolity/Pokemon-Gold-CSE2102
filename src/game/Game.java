@@ -74,7 +74,7 @@ public class Game extends Canvas implements Runnable{
 		frame.setLocationRelativeTo(null); //not relative to anything just centered	
 		frame.setVisible(true); //makes the frame visable
 		
-		audioPaths.initMusicThread();
+		Music.startClip(AudioInit.titleScreen);
 	}
 	
 	//adds a new screen

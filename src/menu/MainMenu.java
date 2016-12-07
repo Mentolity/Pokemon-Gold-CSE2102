@@ -1,6 +1,8 @@
 package menu;
 
 import save.Player;
+import game.AudioInit;
+import game.Effect;
 import game.InputHandler;
 import gfx.Text;
 import gfx.Textbox;
@@ -101,7 +103,12 @@ public class MainMenu extends Menu {
 			}	
 		}
 		if(input.z.isPressed()){
-			if(input.z.ticksPressed()>1) next = options[loc].select();		
+			if(input.z.ticksPressed()>1) 
+				{
+					Effect menuSelect = new Effect (AudioInit.effectPaths.get(4));
+					menuSelect.start();
+					next = options[loc].select();		
+				}
 		}
 	}
 }

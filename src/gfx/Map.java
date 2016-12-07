@@ -9,9 +9,9 @@ import javax.imageio.ImageIO;
 import game.Game;
 import maps.Door;
 import maps.InteractableObject;
-import game.Audio;
+import game.Music;
 import game.AudioInit;
-import game.Audio.audioFormat;
+import game.Effect;
 
 public class Map {
 	String mapPath;
@@ -22,9 +22,6 @@ public class Map {
 	
 	private int[] mPixels;
 	private int[] mpPixels;
-	
-	private int ticksEffect;
-	private long bumpLength;
 	
 	//At some point should replace with more efficient data-structure for retrieving elements
 	protected ArrayList<Door> doors = new ArrayList<Door>();
@@ -398,49 +395,73 @@ public class Map {
 		{
 			case 0x808080:
 			{
-				AudioInit.musicThread.switchSong(AudioInit.musicPaths.get(1));
+				Music.stopClip(AudioInit.route29);
+				Music.startClip(AudioInit.newBarkTown);
 				break;
 			}
 			case 0xB200FF:
 			{
-				AudioInit.musicThread.switchSong(AudioInit.musicPaths.get(3));
+				Music.stopClip(AudioInit.newBarkTown);
+				Music.startClip(AudioInit.route29);
+				break;
+			}
+			case 0xC0C0C0:
+			{
+				Music.stopClip(AudioInit.route29);
+				Music.startClip(AudioInit.cherryGrove);
+				break;
+			}
+			case 0xFF006E:
+			{
+				Music.stopClip(AudioInit.cherryGrove);
+				Music.startClip(AudioInit.route29);
 				break;
 			}
 		}
 	}
 	
-	public void switchSongMap(Game game, Screen screen)
+	public void switchSongMap(Game game, Screen screen, Map previousMap)
 	{
-		if (game.getMap().getMapPath() == "/ElmsLabMap.png")
+		if (game.getMap().getMapPath() != "/worldMap.png")
 		{
-			AudioInit.musicThread.switchSong(AudioInit.musicPaths.get(2));
+			Effect doorEnter = new Effect (AudioInit.effectPaths.get(2));
+			doorEnter.start();
+			
+			if (game.getMap().getMapPath() == "/ElmsLabMap.png")
+			{
+				Music.stopClip(AudioInit.newBarkTown);
+				Music.startClip(AudioInit.elmLab);
+			}
+			if (game.getMap().getMapPath() == "/PokeCenterMap.png")
+			{
+				Music.stopClip(AudioInit.cherryGrove);
+				Music.startClip(AudioInit.pokeCenter);
+			}
 		}
 		
 		else if (game.getMap().getMapPath() == "/worldMap.png")
 		{
-			AudioInit.musicThread.switchSong(AudioInit.musicPaths.get(1));
+			Effect doorLeave = new Effect (AudioInit.effectPaths.get(3));
+			doorLeave.start();
+			
+			if (previousMap.getMapPath() == "/ElmsLabMap.png")
+			{
+				Music.stopClip(AudioInit.elmLab);
+				Music.startClip(AudioInit.newBarkTown);
+			}
+			else if (previousMap.getMapPath() == "/PokeCenterMap.png")
+			{
+				Music.stopClip(AudioInit.pokeCenter);
+				Music.startClip(AudioInit.cherryGrove);
+			}
 		}
 	}
 	
 	public void playCollision()
 	{
-		/* play sound effect if number of ticks passed divisible by length of effect
-		prevents sound overlap*/
-			
-		if (ticksEffect == 0)
-		{
-			Audio bump = new Audio (AudioInit.effectPaths.get(1), audioFormat.EFFECT);
+			Effect bump = new Effect (AudioInit.effectPaths.get(1));
 			bump.start();
-			bumpLength = bump.getEffectTickLength();
-		}
-		else if (ticksEffect > bumpLength)
-		{
-				Audio bump = new Audio (AudioInit.effectPaths.get(1), audioFormat.EFFECT);
-				bump.start();
-				ticksEffect = 0;
-		}
-		ticksEffect++;
-		}
+	}
 	
 	
 	public int[] getPixels(){

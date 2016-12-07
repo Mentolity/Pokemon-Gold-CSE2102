@@ -1,8 +1,11 @@
 package menu;
 
+import game.AudioInit;
+import game.Effect;
 import game.Game;
 import save.Save;
 import game.InputHandler;
+import game.Music;
 import gfx.Textbox;
 import gfx.WhiteSpace;
 
@@ -36,12 +39,19 @@ public class TitleMenu extends Menu {
 				cursor.setPos(8,(loc*9)+9);
 			}	
 		}
-		if(input.z.isPressed() && input.z.ticksPressed()<=1) 
-			close();		
+		if(input.z.isPressed()){
+			if(input.z.ticksPressed()>1)
+			{
+				Effect menuSelect = new Effect (AudioInit.effectPaths.get(4));
+				menuSelect.start();
+				close();
+			}
+		}
 	}
 	public Menu close(){
 		isOpen = false;
-		Game.audioPaths.musicThread.switchSong(Game.audioPaths.musicPaths.get(1));
+		Music.stopClip(AudioInit.titleScreen);
+		Music.startClip(AudioInit.cherryGrove);
 		return this;
 	}
 	public void updateCursor() {
