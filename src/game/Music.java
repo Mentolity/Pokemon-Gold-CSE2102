@@ -29,7 +29,7 @@ public class Music
 		{
 			//initialization of things necessary for playing music
 			File audioFile = new File(audioPath);
-			AudioInputStream audioStream = AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream(audioPath));
+			AudioInputStream audioStream = AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream(audioPath)));
 			AudioFormat format = audioStream.getFormat();
 			DataLine.Info info = new DataLine.Info(Clip.class, format);
 			audioClip = (Clip) AudioSystem.getLine(info);

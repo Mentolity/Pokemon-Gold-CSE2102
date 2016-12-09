@@ -43,7 +43,7 @@ public class Game extends Canvas implements Runnable{
 
 	private JFrame frame;
 	
-	public boolean running = false;
+	public static boolean running = false;
 	public int tickCount = 0;
 	private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB); //Creates a new buffered image object
 	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();//Represents how many pixels are inside the image

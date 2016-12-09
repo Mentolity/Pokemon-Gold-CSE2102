@@ -51,7 +51,7 @@ public class TitleMenu extends Menu {
 	public Menu close(){
 		isOpen = false;
 		Music.stopClip(AudioInit.titleScreen);
-		Music.startClip(AudioInit.cherryGrove);
+		Music.startClip(AudioInit.newBarkTown);
 		return this;
 	}
 	public void updateCursor() {

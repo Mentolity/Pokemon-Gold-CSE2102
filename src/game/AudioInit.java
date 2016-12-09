@@ -37,22 +37,22 @@ public class AudioInit {
 	
 	private void assignMusicPaths (Hashtable <Integer, String> musicPaths)
 	{
-		musicPaths.put(1,"./res/newBarkTown.wav");
-		musicPaths.put(2,"./res/elmLab.wav");
-		musicPaths.put(3,"./res/route29.wav");
-		musicPaths.put(4,"./res/wildPokemonBattle.wav");
-		musicPaths.put(5,"./res/titleScreen.wav");
-		musicPaths.put(6,"./res/cherryGrove.wav");
-		musicPaths.put(7,"./res/pokeCenter.wav");
+		musicPaths.put(1,"/newBarkTown.wav");
+		musicPaths.put(2,"/elmLab.wav");
+		musicPaths.put(3,"/route29.wav");
+		musicPaths.put(4,"/wildPokemonBattle.wav");
+		musicPaths.put(5,"/titleScreen.wav");
+		musicPaths.put(6,"/cherryGrove.wav");
+		musicPaths.put(7,"/pokeCenter.wav");
 		return;
 	}
 	private void assignEffectPaths (Hashtable <Integer, String> effectPaths)
 	{
-		effectPaths.put(1,"./res/bump.wav");
-		effectPaths.put(2,"./res/doorEnter.wav");
-		effectPaths.put(3,"./res/doorLeave.wav");
-		effectPaths.put(4,"./res/menuSelect.wav");
-		effectPaths.put(5,"./res/openMenu.wav");
+		effectPaths.put(1,"/bump.wav");
+		effectPaths.put(2,"/doorEnter.wav");
+		effectPaths.put(3,"/doorLeave.wav");
+		effectPaths.put(4,"/menuSelect.wav");
+		effectPaths.put(5,"/openMenu.wav");
 		return;
 	}
 }

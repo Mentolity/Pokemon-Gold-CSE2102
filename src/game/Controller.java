@@ -46,8 +46,7 @@ public class Controller {
 				interactableObject.getDialogBox().resetDialogBox();
 				interactableObject = null;
 			}
-			if(game.input.z.isPressed() && game.input.z.ticksPressed() <= 1)
-			{
+			if(game.input.z.isPressed() && game.input.z.ticksPressed() <= 1){
 				interactableObject.getDialogBox().NextLine();
 			}
 		}
@@ -63,7 +62,7 @@ public class Controller {
 		mc.setyPos(screen.yOffset + mc.yCenter);
 		mc.setxPos(screen.xOffset + mc.xCenter);	
 		
-		if(game.input.enter.isPressed() && game.input.enter.ticksPressed()<=1){
+		if(game.input.enter.isPressed() && game.input.enter.ticksPressed()<=1 && interactableObject == null){
 				if(!menu.isOpen()){
 					menu.updateCursor();
 					menu.open();

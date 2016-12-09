@@ -1,5 +1,7 @@
 package gfx;
 
+import game.AudioInit;
+import game.Effect;
 import game.Game;
 
 public class DialogBox {
@@ -65,9 +67,7 @@ public class DialogBox {
 	}
 	
 	private void transitionLogic(){
-		
-			
-		
+	 	Effect menuSelect = new Effect (AudioInit.effectPaths.get(4));
 		//if the text hasn't finished rendering then auto-complete and finish transition
 		if(t1EndPos < dialog[index].length() && dialog.length == 1){
 			transitioning = false;
@@ -85,6 +85,7 @@ public class DialogBox {
 		
 		try{
 			if(dialog[index+2].equals("*")){
+				menuSelect.start();
 				index += 3;
 				t1StartPos = 0;
 				t2StartPos = 0;
@@ -115,6 +116,9 @@ public class DialogBox {
 		
 		//Run the dialog transition to the next line of text
 		if(!dialog[index+1].equals("")){
+			if(renderTimer == 1)
+				menuSelect.start();
+			
 			if(renderTimer < 6){
 				textLine1.setY(T1YPOS - 8);
 				textLine2.setY(T2YPOS - 8);	
@@ -132,6 +136,7 @@ public class DialogBox {
 			 	transitioning = false;
 			}
 		}else{
+			menuSelect.start();
 			index += 2;
 			t1StartPos = 0;
 			t1EndPos = 0;

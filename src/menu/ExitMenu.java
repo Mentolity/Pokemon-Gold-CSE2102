@@ -1,5 +1,6 @@
 package menu;
 
+import game.Game;
 import game.InputHandler;
 
 public class ExitMenu extends Menu {
@@ -12,7 +13,7 @@ public class ExitMenu extends Menu {
 		cursor.setPos(88,12);
 	}
 	public void navigate(InputHandler input) {
-		// TODO Auto-generated method stub
-
+		Game.running = false;
+		System.exit(0);
 	}
 }
